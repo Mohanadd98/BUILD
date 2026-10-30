@@ -21,7 +21,8 @@ export const MATERIALS = {
   /**
    * Mass of one bag of cement.
    * SOURCE: Egyptian market standard bag size, confirmed by project owner.
-   * STATUS: Practice.
+   * STATUS: Practice. ECP 203-2025 clause 2-2-1 (p. 2-1) requires CEM I to
+   *   ES 4756-1 but does not specify a bag mass.
    */
   cementBagKg: 50,
 
@@ -31,14 +32,33 @@ export const MATERIALS = {
      * Egyptian practice specifies concrete by cement content (kg per m³)
      * with fixed volumes of sand and gravel, not by a volume ratio like 1:2:4.
      *
-     * SOURCE: common Egyptian bill of quantities practice
-     *   plain concrete       250 kg cement + 0.4 m³ sand + 0.8 m³ gravel
-     *   reinforced concrete  350 kg cement + 0.4 m³ sand + 0.8 m³ gravel
-     * STATUS: Practice. ECP 203 (Egyptian Code for Design and Construction of
-     *   Concrete Structures, Housing and Building National Research Center,
-     *   Cairo) sets the MINIMUM cement content and strength requirements.
-     *   The exact clause and table were not verified for this file; confirm
-     *   them in the current ECP 203 edition before citing in academic work.
+     * Reference: Housing and Building National Research Center (HBRC),
+     *   Egyptian Code for Design and Construction of Concrete Structures,
+     *   ECP 203-2025 (sixth update), Ministerial Decree No. 894 of 2025, Cairo.
+     *
+     * reinforced cementKgPerM3 = 350
+     *   STATUS: Code. ECP 203-2025 Table 2-21 (p. 2-32), minimum cement content
+     *   for reinforced concrete in moderate humidity (50 to 70 % RH) and for
+     *   elements in contact with water such as foundations; the same table
+     *   requires w/c <= 0.50 (0.55 for foundations) and fcu >= 30 N/mm².
+     *   Other exposures in Table 2-21: dry (30 to 50 % RH) 325 kg/m³,
+     *   repeated wetting and drying 375 kg/m³. Chloride exposure: Table 2-22
+     *   (p. 2-33), 350 to 400 kg/m³. Seawater: Table 2-23 (p. 2-34), 375 to
+     *   425 kg/m³.
+     *
+     * plain cementKgPerM3 = 250
+     *   STATUS: Practice. ECP 203-2025 gives no cement content for plain
+     *   concrete; clause 2-3-2-1 (p. 2-21) only requires fcu >= 15 N/mm² for
+     *   plain structural concrete (20 for reinforced).
+     *
+     * sandM3PerM3 = 0.4, gravelM3PerM3 = 0.8
+     *   STATUS: Practice (estimate). ECP 203-2025 clause 2-4 (pp. 2-42 to 2-45)
+     *   gives no fixed aggregate quantities: proportions must come from a mix
+     *   design proven by laboratory trial mixes (clause 2-4-3-1) for a target
+     *   mean strength fm = fcu + M (Eq. 2-11, Table 2-30).
+     *
+     * Upper limit: no mix may exceed 450 kg/m³ of CEM I (500 kg/m³ for
+     *   blended cements), ECP 203-2025 clause 2-3-4-2-4 (p. 2-30).
      */
     mixes: {
       plain: { cementKgPerM3: 250, sandM3PerM3: 0.4, gravelM3PerM3: 0.8 },
