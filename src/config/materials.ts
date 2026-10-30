@@ -126,6 +126,73 @@ export const MATERIALS = {
      */
     defaultWastePercent: 10,
   },
+
+  tiles: {
+    /**
+     * Tile size presets in cm, with a typical thickness in mm. The thickness
+     * is the grout joint depth.
+     * SOURCE: common sizes sold in Egypt. STATUS: Product; thickness varies by
+     *   factory, so check the box label.
+     */
+    presets: {
+      t30x30: { lengthCm: 30, widthCm: 30, thicknessMm: 8 },
+      t40x40: { lengthCm: 40, widthCm: 40, thicknessMm: 8 },
+      t60x60: { lengthCm: 60, widthCm: 60, thicknessMm: 9 },
+      t60x120: { lengthCm: 60, widthCm: 120, thicknessMm: 9 },
+    },
+    /**
+     * Cutting and breakage allowance on tiles.
+     * SOURCE: general estimating allowance, commonly 5 to 10 %; use more for
+     *   diagonal layouts or small rooms. STATUS: Practice.
+     */
+    defaultWastePercent: 10,
+    /**
+     * Default joint width between tiles.
+     * SOURCE: common site practice for rectified porcelain and ceramic.
+     * STATUS: Practice.
+     */
+    defaultJointMm: 3,
+
+    adhesive: {
+      /**
+       * Cementitious tile adhesive consumption in kg per m², chosen by the
+       * longest tile side. Larger tiles need a larger notched trowel and more
+       * adhesive.
+       * SOURCE: typical ranges from manufacturer Technical Data Sheets for
+       *   C1/C2 adhesives classified to EN 12004: about 4 kg/m² with an 8 mm
+       *   notch, 5 kg/m² with 10 mm, 6 kg/m² with 12 mm or back-buttering.
+       * STATUS: Product. Replace with the TDS value of the adhesive you buy.
+       */
+      rates: [
+        { maxSideCm: 40, kgPerM2: 4 },
+        { maxSideCm: 60, kgPerM2: 5 },
+        { maxSideCm: 9999, kgPerM2: 6 },
+      ],
+      /** SOURCE: common bag size. STATUS: Product. */
+      bagKg: 20,
+    },
+
+    grout: {
+      /**
+       * Grout consumption (kg/m²) = (L + W) ÷ (L × W) × J × D × ρ
+       * with L, W tile sides in mm, J joint width in mm, D joint depth in mm
+       * and ρ grout density in kg/dm³.
+       * SOURCE: the joint volume formula used in grout manufacturers'
+       *   consumption tables; a density of about 1.6 kg/dm³ is typical for
+       *   cementitious grout.
+       * STATUS: Geometry for the formula; Product for the density.
+       */
+      densityKgPerDm3: 1.6,
+      /** SOURCE: common bag size. STATUS: Product. */
+      bagKg: 5,
+    },
+
+    /**
+     * Extra adhesive and grout for mixing losses and uneven surfaces.
+     * SOURCE: general estimating allowance. STATUS: Practice.
+     */
+    materialWastePercent: 10,
+  },
 } as const;
 
 export type MaterialSettings = typeof MATERIALS;
