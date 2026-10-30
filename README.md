@@ -6,8 +6,8 @@ Phase 1, Egypt edition. Everything is stored on the phone; there is no account a
 | Calculator        | Status   |
 | ----------------- | -------- |
 | Concrete          | Ready    |
-| Bricks and blocks | Next     |
-| Plaster           | Planned  |
+| Bricks and blocks | Ready    |
+| Plaster           | Next     |
 | Tiles             | Planned  |
 | Paint             | Planned  |
 | Save project      | Planned  |
@@ -99,7 +99,7 @@ Open the file in any text editor (VS Code is free: <https://code.visualstudio.co
 
 ```
 src/
-  app/          one file per screen (home, concrete, settings)
+  app/          one file per screen (home, concrete, blocks, settings)
   calc/         the formulas only, no screens; this is what the tests check
   config/       materials.ts, all ratios and coverage values
   components/   shared buttons, number boxes, result cards

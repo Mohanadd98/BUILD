@@ -135,7 +135,7 @@ export function NumberField({
   );
 }
 
-/** A row of large toggle buttons; exactly one is selected. */
+/** Large toggle buttons; exactly one is selected. More than three wrap into two columns. */
 export function Choice<T extends string>({
   label,
   options,
@@ -151,7 +151,7 @@ export function Choice<T extends string>({
   return (
     <View style={styles.field}>
       <AppText variant="label">{label}</AppText>
-      <View style={styles.choiceRow}>
+      <View style={[styles.choiceRow, options.length > 3 && styles.choiceGrid]}>
         {options.map((o) => {
           const selected = o.value === value;
           return (
@@ -162,12 +162,13 @@ export function Choice<T extends string>({
               onPress={() => onChange(o.value)}
               style={[
                 styles.choice,
+                options.length > 3 && styles.choiceGridItem,
                 {
                   backgroundColor: selected ? colors.accent : colors.surface,
                   borderColor: selected ? colors.accent : colors.border,
                 },
               ]}>
-              <Text style={[textStyles.label, { fontWeight: '700', color: selected ? colors.onAccent : colors.text }]}>
+              <Text style={[textStyles.label, { fontWeight: '700', textAlign: 'center', color: selected ? colors.onAccent : colors.text }]}>
                 {o.label}
               </Text>
             </Pressable>
@@ -245,6 +246,8 @@ const styles = StyleSheet.create({
   },
   input: { flex: 1, minWidth: 0, fontSize: 26, fontWeight: '700', paddingVertical: 10, textAlign: 'left', writingDirection: 'ltr' },
   choiceRow: { flexDirection: 'row', gap: sizes.gap },
+  choiceGrid: { flexWrap: 'wrap' },
+  choiceGridItem: { flexBasis: '45%', flexGrow: 1 },
   choice: {
     flex: 1,
     minHeight: sizes.touch,

@@ -51,6 +51,50 @@ export const MATERIALS = {
      */
     defaultWastePercent: 5,
   },
+
+  masonry: {
+    /**
+     * Block sizes in cm (length × width × height), as laid.
+     * `fullBrickWall: true` means the unit can also build a "one brick" wall
+     * (thickness = two leaves + one joint, e.g. 12 + 1 + 12 = 25 cm).
+     *
+     * SOURCE: common Egyptian market sizes for red clay brick, cement brick
+     *   and hollow concrete block.
+     * STATUS: Practice. Sizes vary by factory; measure a sample or use the
+     *   supplier's sheet and edit these numbers.
+     */
+    blocks: {
+      redBrick: { lengthCm: 25, widthCm: 12, heightCm: 6, fullBrickWall: true },
+      cementBrick: { lengthCm: 25, widthCm: 12, heightCm: 6, fullBrickWall: true },
+      hollowBlock: { lengthCm: 40, widthCm: 20, heightCm: 20, fullBrickWall: false },
+    },
+    /**
+     * Mortar joint thickness, bed and head joints.
+     * SOURCE: common site practice of 10 mm. EN 1996-1-1 (Eurocode 6) allows
+     *   6 to 15 mm for general purpose mortar joints; confirm the clause in
+     *   the edition you cite.
+     * STATUS: Practice.
+     */
+    jointCm: 1,
+    /**
+     * Masonry mortar per 1 m³ of wet mortar: 1 m³ sand + 250 kg cement.
+     * The cement fills the voids in the sand, so the sand volume is taken
+     * equal to the mortar volume.
+     * SOURCE: common Egyptian bill of quantities practice.
+     * STATUS: Practice. Check against the project specification.
+     */
+    mortar: { cementKgPerM3: 250, sandM3PerM3: 1.0 },
+    /**
+     * Breakage and cutting allowance on blocks.
+     * SOURCE: general estimating allowance. STATUS: Practice.
+     */
+    defaultBlockWastePercent: 5,
+    /**
+     * Extra mortar for droppings, filling frogs and uneven joints.
+     * SOURCE: general estimating allowance. STATUS: Practice.
+     */
+    mortarWastePercent: 10,
+  },
 } as const;
 
 export type MaterialSettings = typeof MATERIALS;

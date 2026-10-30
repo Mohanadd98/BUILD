@@ -18,6 +18,7 @@ function AppStack() {
         }}>
         <Stack.Screen name="index" options={{ title: t('app.name') }} />
         <Stack.Screen name="concrete" options={{ title: t('concrete.title') }} />
+        <Stack.Screen name="blocks" options={{ title: t('blocks.title') }} />
         <Stack.Screen name="settings" options={{ title: t('settings.title') }} />
       </Stack>
     </>
