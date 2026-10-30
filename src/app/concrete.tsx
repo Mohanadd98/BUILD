@@ -2,6 +2,7 @@ import { useState } from 'react';
 
 import { calcConcrete, type ConcreteMix } from '@/calc/concrete';
 import { fmt, ltr, parseNumber } from '@/calc/format';
+import { SaveButton } from '@/components/save-button';
 import { AppText, BigButton, Card, Choice, FormulaBox, NumberField, ResultRow, Screen } from '@/components/ui';
 import { MATERIALS } from '@/config/materials';
 import { usePrefs } from '@/state/preferences';
@@ -61,6 +62,27 @@ export default function ConcreteScreen() {
             <ResultRow label={t('concrete.sand')} value={fmt(result.sandM3)} unit="m³" />
             <ResultRow label={t('concrete.gravel')} value={fmt(result.gravelM3)} unit="m³" />
           </Card>
+          <SaveButton
+            build={() => ({
+              tool: 'concrete',
+              inputs: [
+                { labelKey: 'concrete.mix', valueKey: `concrete.mix.${mix}` },
+                { labelKey: 'concrete.length', value: length.trim(), unit: 'm' },
+                { labelKey: 'concrete.width', value: width.trim(), unit: 'm' },
+                { labelKey: 'concrete.thickness', value: thickness.trim(), unit: 'cm' },
+                { labelKey: 'common.waste', value: waste.trim(), unit: '%' },
+              ],
+              results: [
+                { labelKey: 'concrete.volume', value: fmt(result.volumeM3), unit: 'm³' },
+                { labelKey: 'concrete.orderVolume', value: fmt(result.orderVolumeM3), unit: 'm³' },
+                { labelKey: 'concrete.cement', value: String(result.cementBags), unitKey: 'concrete.bags' },
+                { labelKey: 'concrete.step.cement', value: fmt(result.cementKg, 0), unit: 'kg' },
+                { labelKey: 'concrete.sand', value: fmt(result.sandM3), unit: 'm³' },
+                { labelKey: 'concrete.gravel', value: fmt(result.gravelM3), unit: 'm³' },
+              ],
+              steps: result.steps,
+            })}
+          />
           <FormulaBox steps={result.steps} />
           <AppText variant="muted">{t('common.sourceNote')}</AppText>
         </>

@@ -3,7 +3,6 @@ export const en = {
   'home.subtitle': 'Quantity calculator',
   'home.concrete': 'Concrete',
   'home.concrete.hint': 'Slabs, footings, beams',
-  'home.soon': 'Coming next',
   'home.blocks': 'Bricks and blocks',
   'home.blocks.hint': 'Walls, mortar',
   'home.plaster.hint': 'Walls and ceilings, spatter coat',
@@ -12,6 +11,7 @@ export const en = {
   'home.tiles': 'Tiles',
   'home.paint.hint': 'Walls, sealer, putty',
   'home.paint': 'Paint',
+  'home.projects': 'Saved projects',
   'home.settings': 'Settings',
 
   'settings.title': 'Settings',
@@ -142,6 +142,27 @@ export const en = {
   'paint.step.cans': 'Cans (rounded up)',
   'paint.step.sealer': 'Sealer liters',
   'paint.step.putty': 'Putty kilograms',
+
+  'save.button': 'Save to project',
+  'save.title': 'Save to project',
+  'save.nothing': 'Nothing to save. Calculate something first.',
+  'save.newProject': 'New project name',
+  'save.namePlaceholder': 'e.g. Villa Maadi',
+  'save.createAndSave': 'Create project and save',
+  'save.existing': 'Or add to an existing project',
+  'save.done': 'Saved',
+
+  'projects.title': 'Saved projects',
+  'projects.empty': 'No saved projects yet. Open a calculator, enter values, then tap "Save to project".',
+  'projects.calcCount': 'calculations',
+  'projects.notFound': 'This project no longer exists.',
+  'projects.noCalcs': 'This project has no calculations.',
+  'projects.share': 'Share (WhatsApp, email)',
+  'projects.deleteCalc': 'Delete this calculation',
+  'projects.deleteProject': 'Delete project',
+  'projects.cannotUndo': 'This cannot be undone.',
+  'projects.delete': 'Delete',
+  'projects.cancel': 'Cancel',
 } as const;
 
 export type TKey = keyof typeof en;

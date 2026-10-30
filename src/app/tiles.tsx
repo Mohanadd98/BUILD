@@ -2,6 +2,7 @@ import { useState } from 'react';
 
 import { fmt, ltr, parseNumber } from '@/calc/format';
 import { calcTiles, type TilePreset } from '@/calc/tiles';
+import { SaveButton } from '@/components/save-button';
 import { AppText, BigButton, Card, Choice, FormulaBox, NumberField, ResultRow, Screen } from '@/components/ui';
 import { MATERIALS } from '@/config/materials';
 import { usePrefs } from '@/state/preferences';
@@ -96,6 +97,26 @@ export default function TilesScreen() {
               unit={`${t('tiles.bagsOf')} ${ltr(`${s.grout.bagKg} kg`)}`}
             />
           </Card>
+          <SaveButton
+            build={() => ({
+              tool: 'tiles',
+              inputs: [
+                { labelKey: 'tiles.size', value: `${fmt(size.lengthCm)}×${fmt(size.widthCm)}`, unit: 'cm' },
+                { labelKey: 'tiles.area', value: area.trim(), unit: 'm²' },
+                { labelKey: 'tiles.perBox', value: perBox.trim() },
+                { labelKey: 'common.waste', value: waste.trim(), unit: '%' },
+                { labelKey: 'tiles.joint', value: joint.trim(), unit: 'mm' },
+                { labelKey: 'tiles.thickness', value: thickness.trim(), unit: 'mm' },
+              ],
+              results: [
+                { labelKey: 'tiles.count', value: String(result.tiles), unitKey: 'tiles.units' },
+                { labelKey: 'tiles.boxes', value: String(result.boxes), unitKey: 'tiles.boxUnit' },
+                { labelKey: 'tiles.adhesive', value: fmt(result.adhesiveKg, 0), unit: 'kg' },
+                { labelKey: 'tiles.grout', value: fmt(result.groutKg, 1), unit: 'kg' },
+              ],
+              steps: result.steps,
+            })}
+          />
           <FormulaBox steps={result.steps} />
           <AppText variant="muted">{t('tiles.legend')}</AppText>
           <AppText variant="muted">{t('tiles.productNote')}</AppText>

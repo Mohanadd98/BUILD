@@ -10,7 +10,7 @@ Phase 1, Egypt edition. Everything is stored on the phone; there is no account a
 | Plaster           | Ready    |
 | Tiles             | Ready    |
 | Paint             | Ready    |
-| Save project      | Next     |
+| Save project      | Ready    |
 
 ## Run the app on your phone (first time, about 20 minutes)
 
@@ -73,6 +73,16 @@ npm install
 npx expo start
 ```
 
+## Saving projects
+
+1. Open any calculator and enter the values.
+2. Tap **Save to project**.
+3. Type a new project name (for example "Villa Maadi") and tap **Create project and save**, or tap an existing project to add the calculation to it.
+4. Open **Saved projects** on the home screen to see every saved calculation with its formulas.
+5. **Share** sends the calculation as text through WhatsApp, email or any app on the phone.
+
+**Important:** saved projects live only on this phone. Uninstalling the app or losing the phone deletes them. Use **Share** to keep a copy of anything important.
+
 ## Check the formulas (unit tests)
 
 Every formula has automatic tests that compare the app's answer with numbers worked out by hand.
@@ -99,14 +109,15 @@ Open the file in any text editor (VS Code is free: <https://code.visualstudio.co
 
 ```
 src/
-  app/          one file per screen (home, five calculators, settings)
+  app/          one file per screen (home, five calculators, save, projects, settings)
   calc/         the formulas only, no screens; this is what the tests check
   config/       materials.ts, all ratios and coverage values
   components/   shared buttons, number boxes, result cards
   i18n/         English (en.ts) and Arabic (ar.ts) text
-  state/        language and light/dark preference, saved on the phone
+  state/        language, light/dark preference and saved projects in memory
+  storage/      saving projects on the phone
   theme/        colours and sizes
-__tests__/      unit tests, one file per calculator
+__tests__/      unit tests, one file per calculator plus project storage
 ```
 
 ## Technology

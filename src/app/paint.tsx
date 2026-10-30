@@ -2,6 +2,7 @@ import { useState } from 'react';
 
 import { fmt, ltr, parseNumber } from '@/calc/format';
 import { calcPaint } from '@/calc/paint';
+import { SaveButton } from '@/components/save-button';
 import { AppText, BigButton, Card, Choice, FormulaBox, NumberField, ResultRow, Screen } from '@/components/ui';
 import { MATERIALS } from '@/config/materials';
 import { usePrefs } from '@/state/preferences';
@@ -76,6 +77,31 @@ export default function PaintScreen() {
               </>
             ) : null}
           </Card>
+          <SaveButton
+            build={() => ({
+              tool: 'paint',
+              inputs: [
+                { labelKey: 'paint.prep', valueKey: `common.${prep}` },
+                { labelKey: 'paint.area', value: area.trim(), unit: 'm²' },
+                { labelKey: 'paint.coats', value: coats.trim() },
+                { labelKey: 'paint.coverage', value: coverage.trim(), unit: 'm²/L' },
+                { labelKey: 'common.waste', value: waste.trim(), unit: '%' },
+              ],
+              results: [
+                { labelKey: 'paint.paint', value: fmt(result.paintL, 1), unit: 'L' },
+                ...(result.cans !== null
+                  ? [{ labelKey: 'paint.cans', value: String(result.cans), unit: `× ${can.trim()} L` }]
+                  : []),
+                ...(prep === 'yes'
+                  ? [
+                      { labelKey: 'paint.sealer', value: fmt(result.sealerL, 1), unit: 'L' },
+                      { labelKey: 'paint.putty', value: fmt(result.puttyKg, 0), unit: 'kg' },
+                    ]
+                  : []),
+              ],
+              steps: result.steps,
+            })}
+          />
           <FormulaBox steps={result.steps} />
           <AppText variant="muted">{t('paint.legend')}</AppText>
           <AppText variant="muted">{t('paint.productNote')}</AppText>

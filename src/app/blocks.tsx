@@ -2,6 +2,7 @@ import { useState } from 'react';
 
 import { calcBlocks, type BlockPreset, type BlockSize, type WallType } from '@/calc/blocks';
 import { fmt, ltr, parseNumber } from '@/calc/format';
+import { SaveButton } from '@/components/save-button';
 import { AppText, BigButton, Card, Choice, FormulaBox, NumberField, ResultRow, Screen } from '@/components/ui';
 import { MATERIALS } from '@/config/materials';
 import { usePrefs } from '@/state/preferences';
@@ -108,6 +109,31 @@ export default function BlocksScreen() {
             />
             <ResultRow label={t('concrete.sand')} value={fmt(result.sandM3, 3)} unit="m³" />
           </Card>
+          <SaveButton
+            build={() => ({
+              tool: 'blocks',
+              inputs: [
+                choice === 'custom'
+                  ? { labelKey: 'blocks.type', value: `${fmt(block.lengthCm)}×${fmt(block.widthCm)}×${fmt(block.heightCm)}`, unit: 'cm' }
+                  : { labelKey: 'blocks.type', valueKey: `blocks.${choice}` },
+                { labelKey: 'blocks.wallType', valueKey: `blocks.wall.${effectiveWallType}` },
+                { labelKey: 'blocks.wallLength', value: length.trim(), unit: 'm' },
+                { labelKey: 'blocks.wallHeight', value: height.trim(), unit: 'm' },
+                { labelKey: 'blocks.openings', value: openings.trim() || '0', unit: 'm²' },
+                { labelKey: 'common.waste', value: waste.trim(), unit: '%' },
+              ],
+              results: [
+                { labelKey: 'blocks.netArea', value: fmt(result.netAreaM2), unit: 'm²' },
+                { labelKey: 'blocks.count', value: String(result.blocks), unitKey: 'blocks.units' },
+                { labelKey: 'blocks.thickness', value: fmt(result.wallThicknessM * 100, 1), unit: 'cm' },
+                { labelKey: 'blocks.mortar', value: fmt(result.orderMortarM3, 3), unit: 'm³' },
+                { labelKey: 'concrete.cement', value: String(result.cementBags), unitKey: 'concrete.bags' },
+                { labelKey: 'concrete.step.cement', value: fmt(result.cementKg, 0), unit: 'kg' },
+                { labelKey: 'concrete.sand', value: fmt(result.sandM3, 3), unit: 'm³' },
+              ],
+              steps: result.steps,
+            })}
+          />
           <FormulaBox steps={result.steps} />
           <AppText variant="muted">{t('blocks.legend')}</AppText>
           <AppText variant="muted">{t('common.sourceNote')}</AppText>

@@ -2,6 +2,7 @@ import { useState } from 'react';
 
 import { fmt, ltr, parseNumber } from '@/calc/format';
 import { calcPlaster, type PlasterSide } from '@/calc/plaster';
+import { SaveButton } from '@/components/save-button';
 import { AppText, BigButton, Card, Choice, FormulaBox, NumberField, ResultRow, Screen } from '@/components/ui';
 import { MATERIALS } from '@/config/materials';
 import { usePrefs } from '@/state/preferences';
@@ -74,6 +75,28 @@ export default function PlasterScreen() {
             />
             <ResultRow label={t('plaster.totalSand')} value={fmt(result.sandM3, 3)} unit="m³" />
           </Card>
+          <SaveButton
+            build={() => ({
+              tool: 'plaster',
+              inputs: [
+                { labelKey: 'plaster.side', valueKey: `plaster.${side}` },
+                { labelKey: 'plaster.spatter', valueKey: `common.${spatter}` },
+                { labelKey: 'plaster.area', value: area.trim(), unit: 'm²' },
+                { labelKey: 'plaster.thickness', value: thickness.trim(), unit: 'cm' },
+                { labelKey: 'common.waste', value: waste.trim(), unit: '%' },
+              ],
+              results: [
+                { labelKey: 'plaster.plasterMortar', value: fmt(result.plasterM3, 3), unit: 'm³' },
+                ...(result.spatterM3 > 0
+                  ? [{ labelKey: 'plaster.spatterMortar', value: fmt(result.spatterM3, 3), unit: 'm³' }]
+                  : []),
+                { labelKey: 'plaster.totalCement', value: String(result.cementBags), unitKey: 'concrete.bags' },
+                { labelKey: 'concrete.step.cement', value: fmt(result.cementKg, 0), unit: 'kg' },
+                { labelKey: 'plaster.totalSand', value: fmt(result.sandM3, 3), unit: 'm³' },
+              ],
+              steps: result.steps,
+            })}
+          />
           <FormulaBox steps={result.steps} />
           <AppText variant="muted">{t('plaster.legend')}</AppText>
           <AppText variant="muted">{t('common.sourceNote')}</AppText>
