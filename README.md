@@ -9,8 +9,8 @@ Phase 1, Egypt edition. Everything is stored on the phone; there is no account a
 | Bricks and blocks | Ready    |
 | Plaster           | Ready    |
 | Tiles             | Ready    |
-| Paint             | Next     |
-| Save project      | Planned  |
+| Paint             | Ready    |
+| Save project      | Next     |
 
 ## Run the app on your phone (first time, about 20 minutes)
 
@@ -99,7 +99,7 @@ Open the file in any text editor (VS Code is free: <https://code.visualstudio.co
 
 ```
 src/
-  app/          one file per screen (home, concrete, blocks, plaster, tiles, settings)
+  app/          one file per screen (home, five calculators, settings)
   calc/         the formulas only, no screens; this is what the tests check
   config/       materials.ts, all ratios and coverage values
   components/   shared buttons, number boxes, result cards

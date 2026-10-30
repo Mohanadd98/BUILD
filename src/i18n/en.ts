@@ -10,6 +10,7 @@ export const en = {
   'home.plaster': 'Plaster',
   'home.tiles.hint': 'Floors, adhesive, grout',
   'home.tiles': 'Tiles',
+  'home.paint.hint': 'Walls, sealer, putty',
   'home.paint': 'Paint',
   'home.settings': 'Settings',
 
@@ -122,6 +123,25 @@ export const en = {
   'tiles.step.adhesive': 'Tile adhesive',
   'tiles.step.groutRate': 'Grout per m²',
   'tiles.step.grout': 'Grout total',
+
+  'paint.title': 'Paint',
+  'paint.prep': 'Include sealer and putty',
+  'paint.area': 'Wall area',
+  'paint.coats': 'Number of paint coats',
+  'paint.coverage': 'Coverage per coat (from the data sheet)',
+  'paint.can': 'Can size (leave empty to skip)',
+  'paint.paint': 'Paint (with waste)',
+  'paint.cans': 'Cans',
+  'paint.canUnit': 'cans',
+  'paint.sealer': 'Sealer, 1 coat',
+  'paint.putty': 'Putty, 2 coats',
+  'paint.enterValues': 'Enter the wall area to see the result.',
+  'paint.legend': 'A = area, n = coats, c = coverage per coat.',
+  'paint.productNote': 'Coverage depends on the product and the wall surface. Use the manufacturer data sheet.',
+  'paint.step.paint': 'Paint liters',
+  'paint.step.cans': 'Cans (rounded up)',
+  'paint.step.sealer': 'Sealer liters',
+  'paint.step.putty': 'Putty kilograms',
 } as const;
 
 export type TKey = keyof typeof en;

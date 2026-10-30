@@ -193,6 +193,42 @@ export const MATERIALS = {
      */
     materialWastePercent: 10,
   },
+
+  paint: {
+    /**
+     * Finish paint coverage per coat, m² per liter.
+     * SOURCE: typical theoretical spreading rate on manufacturer Technical
+     *   Data Sheets for interior emulsion paints (about 10 to 12 m²/L on
+     *   smooth, primed walls). STATUS: Product. Replace with your paint's
+     *   TDS value; the user can also change it on screen.
+     */
+    coverageM2PerL: 10,
+    /** SOURCE: common two-coat finish specification. STATUS: Practice. */
+    defaultCoats: 2,
+    /**
+     * Default can size in liters (editable on screen).
+     * STATUS: Product; check the size sold for your brand.
+     */
+    defaultCanLitres: 4,
+    /**
+     * Sealer (سيلر): one coat applied before putty.
+     * SOURCE: typical TDS spreading rate of about 10 m²/L.
+     * STATUS: Product.
+     */
+    sealer: { coverageM2PerL: 10, coats: 1 },
+    /**
+     * Wall putty (معجون): two coats before painting.
+     * SOURCE: rough site figure of about 0.6 kg/m² per coat for ready-mixed
+     *   acrylic putty. STATUS: Product, NOT verified against a data sheet;
+     *   consumption depends strongly on how uneven the plaster is.
+     */
+    putty: { kgPerM2PerCoat: 0.6, coats: 2 },
+    /**
+     * Allowance for roller absorption, spills and touch-ups.
+     * SOURCE: general estimating allowance. STATUS: Practice.
+     */
+    defaultWastePercent: 10,
+  },
 } as const;
 
 export type MaterialSettings = typeof MATERIALS;
