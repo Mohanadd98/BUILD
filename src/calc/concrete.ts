@@ -3,6 +3,13 @@ import { MATERIALS, type MaterialSettings } from '@/config/materials';
 import { fmt, type Step } from './format';
 
 export type ConcreteMix = keyof MaterialSettings['concrete']['mixes'];
+export type ConcreteZone = keyof MaterialSettings['concrete']['zones'];
+
+/** The zone a concrete type is listed under. */
+export function zoneOf(mix: ConcreteMix, settings: MaterialSettings = MATERIALS): ConcreteZone {
+  const zones = settings.concrete.zones;
+  return (Object.keys(zones) as ConcreteZone[]).find((z) => (zones[z] as readonly string[]).includes(mix)) ?? 'normal';
+}
 
 export interface ConcreteInput {
   lengthM: number;

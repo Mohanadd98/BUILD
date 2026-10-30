@@ -1,4 +1,4 @@
-import { calcConcrete, codeRequirement } from '@/calc/concrete';
+import { calcConcrete, codeRequirement, zoneOf, type ConcreteMix } from '@/calc/concrete';
 import { MATERIALS } from '@/config/materials';
 
 describe('calcConcrete', () => {
@@ -43,6 +43,36 @@ describe('calcConcrete', () => {
     expect(codeRequirement('dry')).toBe('fcu ≥ 25 N/mm² · w/c ≤ 0.6 · ECP 203-2025 Table 2-21');
     expect(codeRequirement('normal')).toBe('fcu ≥ 30 N/mm² · w/c ≤ 0.5 (0.55 foundations) · ECP 203-2025 Table 2-21');
     expect(codeRequirement('wetDry')).toBe('fcu ≥ 35 N/mm² · w/c ≤ 0.45 · ECP 203-2025 Table 2-21');
+  });
+
+  it('uses the Table 2-22 and 2-23 cement contents for chlorides and seawater', () => {
+    const kg: [ConcreteMix, number][] = [
+      ['chlorideModerate', 350],
+      ['chlorideWet', 375],
+      ['chlorideWetDry', 400],
+      ['seaAir', 375],
+      ['seaPrecast', 375],
+      ['seaInSitu', 400],
+      ['seaTidal', 425],
+    ];
+    for (const [mix, perM3] of kg) expect(calcConcrete({ ...slab, mix })!.cementKg).toBeCloseTo(3.15 * perM3, 6);
+    // tidal zone: 3.15 × 425 = 1338.75 kg -> 26.775 -> 27 bags
+    expect(calcConcrete({ ...slab, mix: 'seaTidal' })!.cementBags).toBe(27);
+  });
+
+  it('states the chloride and seawater code requirements', () => {
+    expect(codeRequirement('chlorideWetDry')).toBe('fcu ≥ 40 N/mm² · w/c ≤ 0.4 · ECP 203-2025 Table 2-22');
+    expect(codeRequirement('seaInSitu')).toBe('fcu ≥ 40 N/mm² · w/c ≤ 0.45 · ECP 203-2025 Table 2-23');
+    expect(codeRequirement('seaTidal')).toBe('fcu ≥ 45 N/mm² · w/c ≤ 0.4 · ECP 203-2025 Table 2-23');
+  });
+
+  it('lists every concrete type in exactly one zone', () => {
+    const listed = Object.values(MATERIALS.concrete.zones).flat();
+    expect([...listed].sort()).toEqual(Object.keys(MATERIALS.concrete.mixes).sort());
+    expect(zoneOf('seaTidal')).toBe('seawater');
+    expect(zoneOf('chlorideWet')).toBe('chloride');
+    expect(zoneOf('dry')).toBe('normal');
+    expect(zoneOf('plain')).toBe('plain');
   });
 
   it('does not add a bag when the cement is an exact multiple of 50 kg', () => {

@@ -1,6 +1,6 @@
 import { useState } from 'react';
 
-import { calcConcrete, codeRequirement, type ConcreteMix } from '@/calc/concrete';
+import { calcConcrete, codeRequirement, zoneOf, type ConcreteMix, type ConcreteZone } from '@/calc/concrete';
 import { fmt, ltr, parseNumber } from '@/calc/format';
 import { SaveButton } from '@/components/save-button';
 import { AppText, BigButton, Card, Choice, FormulaBox, NumberField, ResultRow, Screen } from '@/components/ui';
@@ -9,7 +9,8 @@ import { usePrefs } from '@/state/preferences';
 
 const initialWaste = String(MATERIALS.concrete.defaultWastePercent);
 const mixes = MATERIALS.concrete.mixes;
-const mixOrder: ConcreteMix[] = ['dry', 'normal', 'wetDry', 'plain'];
+const zones = MATERIALS.concrete.zones;
+const zoneOrder: ConcreteZone[] = ['normal', 'chloride', 'seawater', 'plain'];
 
 export default function ConcreteScreen() {
   const { t } = usePrefs();
@@ -18,6 +19,8 @@ export default function ConcreteScreen() {
   const [thickness, setThickness] = useState('');
   const [waste, setWaste] = useState(initialWaste);
   const [mix, setMix] = useState<ConcreteMix>('normal');
+  const zone = zoneOf(mix);
+  const zoneMixes = zones[zone] as readonly ConcreteMix[];
 
   const result = calcConcrete({
     lengthM: parseNumber(length) ?? 0,
@@ -36,15 +39,27 @@ export default function ConcreteScreen() {
 
   return (
     <Screen>
-      <Choice<ConcreteMix>
-        label={t('concrete.mix')}
-        value={mix}
-        onChange={setMix}
-        options={mixOrder.map((m) => ({
-          value: m,
-          label: `${t(`concrete.mix.${m}`)}\n${ltr(`${mixes[m].cementKgPerM3} kg/m³`)}`,
-        }))}
+      <Choice<ConcreteZone>
+        label={t('concrete.zone')}
+        value={zone}
+        onChange={(z) => setMix(zones[z][0])}
+        options={zoneOrder.map((z) => ({ value: z, label: t(`concrete.zone.${z}`) }))}
       />
+      {zoneMixes.length > 1 ? (
+        <Choice<ConcreteMix>
+          label={t('concrete.mix')}
+          value={mix}
+          onChange={setMix}
+          stacked
+          options={zoneMixes.map((m) => ({
+            value: m,
+            label: `${t(`concrete.mix.${m}`)}\n${ltr(`${mixes[m].cementKgPerM3} kg/m³`)}`,
+          }))}
+        />
+      ) : null}
+      {zone === 'chloride' || zone === 'seawater' ? (
+        <AppText variant="muted">{t(`concrete.zoneNote.${zone}`)}</AppText>
+      ) : null}
       <NumberField label={t('concrete.length')} unit="m" value={length} onChangeText={setLength} />
       <NumberField label={t('concrete.width')} unit="m" value={width} onChangeText={setWidth} />
       <NumberField label={t('concrete.thickness')} unit="cm" value={thickness} onChangeText={setThickness} />
@@ -71,6 +86,7 @@ export default function ConcreteScreen() {
             build={() => ({
               tool: 'concrete',
               inputs: [
+                { labelKey: 'concrete.zone', valueKey: `concrete.zone.${zone}` },
                 { labelKey: 'concrete.mix', valueKey: `concrete.mix.${mix}` },
                 { labelKey: 'concrete.length', value: length.trim(), unit: 'm' },
                 { labelKey: 'concrete.width', value: width.trim(), unit: 'm' },

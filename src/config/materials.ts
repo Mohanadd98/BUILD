@@ -45,8 +45,32 @@ export const MATERIALS = {
      *            contact with water such as foundations (w/c <= 0.55).
      *   wetDry   375 kg/m³, w/c <= 0.45, fcu >= 35: repeated wetting and drying.
      *   STATUS: Code (minimum values).
-     *   Not covered by the app: chloride exposure, Table 2-22 (p. 2-33),
-     *   350 to 400 kg/m³; seawater, Table 2-23 (p. 2-34), 375 to 425 kg/m³.
+     *
+     * Reinforced concrete exposed to chlorides (ECP 203-2025 Table 2-22,
+     * p. 2-33; clause 2-3-4-2-11, p. 2-31):
+     *   chlorideModerate  350 kg/m³, w/c <= 0.50, fcu >= 30: moderate
+     *                     humidity with airborne chlorides.
+     *   chlorideWet       375 kg/m³, w/c <= 0.45, fcu >= 35: nearly always
+     *                     wet, rarely dry, with chlorides (swimming pools,
+     *                     elements exposed to industrial waste).
+     *   chlorideWetDry    400 kg/m³, w/c <= 0.40, fcu >= 40: wetting and
+     *                     drying with chlorides (bridges sprayed with
+     *                     chloride water, pavements, car park slabs).
+     *   With CEM III/A or CEM III/B the table footnote allows fcu 2.5 N/mm²
+     *   lower, cement content 25 kg/m³ lower and w/c 0.05 higher; the app
+     *   uses the CEM I values.
+     *
+     * Reinforced concrete exposed to seawater or combined attack (ECP
+     * 203-2025 Table 2-23, p. 2-34; clause 2-3-4-2-12, p. 2-33):
+     *   seaAir      375 kg/m³, w/c <= 0.45, fcu >= 35: salt-laden air.
+     *   seaPrecast  375 kg/m³, w/c <= 0.45, fcu >= 40: continuously
+     *               submerged in seawater, precast.
+     *   seaInSitu   400 kg/m³, w/c <= 0.45, fcu >= 40: continuously
+     *               submerged in seawater, cast in situ.
+     *   seaTidal    425 kg/m³, w/c <= 0.40, fcu >= 45: tidal and wave
+     *               splash zones.
+     *
+     * `zone` groups the types on screen; it is not a code value.
      *
      * plain cementKgPerM3 = 250
      *   STATUS: Practice. ECP 203-2025 gives no cement content for plain
@@ -79,6 +103,41 @@ export const MATERIALS = {
         cementKgPerM3: 375, sandM3PerM3: 0.4, gravelM3PerM3: 0.8,
         minFcu: 35, maxWc: 0.45, maxWcFoundations: null, ref: 'Table 2-21',
       },
+      chlorideModerate: {
+        cementKgPerM3: 350, sandM3PerM3: 0.4, gravelM3PerM3: 0.8,
+        minFcu: 30, maxWc: 0.5, maxWcFoundations: null, ref: 'Table 2-22',
+      },
+      chlorideWet: {
+        cementKgPerM3: 375, sandM3PerM3: 0.4, gravelM3PerM3: 0.8,
+        minFcu: 35, maxWc: 0.45, maxWcFoundations: null, ref: 'Table 2-22',
+      },
+      chlorideWetDry: {
+        cementKgPerM3: 400, sandM3PerM3: 0.4, gravelM3PerM3: 0.8,
+        minFcu: 40, maxWc: 0.4, maxWcFoundations: null, ref: 'Table 2-22',
+      },
+      seaAir: {
+        cementKgPerM3: 375, sandM3PerM3: 0.4, gravelM3PerM3: 0.8,
+        minFcu: 35, maxWc: 0.45, maxWcFoundations: null, ref: 'Table 2-23',
+      },
+      seaPrecast: {
+        cementKgPerM3: 375, sandM3PerM3: 0.4, gravelM3PerM3: 0.8,
+        minFcu: 40, maxWc: 0.45, maxWcFoundations: null, ref: 'Table 2-23',
+      },
+      seaInSitu: {
+        cementKgPerM3: 400, sandM3PerM3: 0.4, gravelM3PerM3: 0.8,
+        minFcu: 40, maxWc: 0.45, maxWcFoundations: null, ref: 'Table 2-23',
+      },
+      seaTidal: {
+        cementKgPerM3: 425, sandM3PerM3: 0.4, gravelM3PerM3: 0.8,
+        minFcu: 45, maxWc: 0.4, maxWcFoundations: null, ref: 'Table 2-23',
+      },
+    },
+    /** Screen grouping of the types above, first type is the zone's default. */
+    zones: {
+      normal: ['normal', 'dry', 'wetDry'],
+      chloride: ['chlorideModerate', 'chlorideWet', 'chlorideWetDry'],
+      seawater: ['seaAir', 'seaPrecast', 'seaInSitu', 'seaTidal'],
+      plain: ['plain'],
     },
     /**
      * Extra volume ordered to cover spillage, formwork bulging and uneven

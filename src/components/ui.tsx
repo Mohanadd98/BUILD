@@ -135,23 +135,29 @@ export function NumberField({
   );
 }
 
-/** Large toggle buttons; exactly one is selected. More than three wrap into two columns. */
+/**
+ * Large toggle buttons; exactly one is selected. More than three wrap into two
+ * columns; `stacked` puts one per row for long labels.
+ */
 export function Choice<T extends string>({
   label,
   options,
   value,
   onChange,
+  stacked = false,
 }: {
   label: string;
   options: { value: T; label: string }[];
   value: T;
   onChange: (v: T) => void;
+  stacked?: boolean;
 }) {
   const { colors } = usePrefs();
+  const grid = !stacked && options.length > 3;
   return (
     <View style={styles.field}>
       <AppText variant="label">{label}</AppText>
-      <View style={[styles.choiceRow, options.length > 3 && styles.choiceGrid]}>
+      <View style={[styles.choiceRow, grid && styles.choiceGrid, stacked && styles.choiceStack]}>
         {options.map((o) => {
           const selected = o.value === value;
           return (
@@ -162,7 +168,8 @@ export function Choice<T extends string>({
               onPress={() => onChange(o.value)}
               style={[
                 styles.choice,
-                options.length > 3 && styles.choiceGridItem,
+                grid && styles.choiceGridItem,
+                stacked && styles.choiceStackItem,
                 {
                   backgroundColor: selected ? colors.accent : colors.surface,
                   borderColor: selected ? colors.accent : colors.border,
@@ -248,6 +255,8 @@ const styles = StyleSheet.create({
   choiceRow: { flexDirection: 'row', gap: sizes.gap },
   choiceGrid: { flexWrap: 'wrap' },
   choiceGridItem: { flexBasis: '45%', flexGrow: 1 },
+  choiceStack: { flexDirection: 'column' },
+  choiceStackItem: { flex: 0, paddingVertical: 10 },
   choice: {
     flex: 1,
     minHeight: sizes.touch,
