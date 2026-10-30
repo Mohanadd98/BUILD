@@ -1,7 +1,7 @@
 import { useState } from 'react';
 
 import { calcConcrete, type ConcreteMix } from '@/calc/concrete';
-import { fmt, parseNumber } from '@/calc/format';
+import { fmt, ltr, parseNumber } from '@/calc/format';
 import { AppText, BigButton, Card, Choice, FormulaBox, NumberField, ResultRow, Screen } from '@/components/ui';
 import { MATERIALS } from '@/config/materials';
 import { usePrefs } from '@/state/preferences';
@@ -54,7 +54,7 @@ export default function ConcreteScreen() {
             <ResultRow label={t('concrete.volume')} value={fmt(result.volumeM3)} unit="m³" />
             <ResultRow label={t('concrete.orderVolume')} value={fmt(result.orderVolumeM3)} unit="m³" />
             <ResultRow
-              label={`${t('concrete.cement')} (${fmt(result.cementKg, 0)} kg)`}
+              label={`${t('concrete.cement')} (${ltr(`${fmt(result.cementKg, 0)} kg`)})`}
               value={String(result.cementBags)}
               unit={t('concrete.bags')}
             />

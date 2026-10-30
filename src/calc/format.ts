@@ -12,6 +12,14 @@ export function fmt(n: number, maxDecimals = 2): string {
 }
 
 /**
+ * Keeps a number with its unit in left-to-right order inside Arabic text,
+ * so "5 mm" is not shown as "mm 5". Uses Unicode isolate marks.
+ */
+export function ltr(text: string): string {
+  return `\u2066${text}\u2069`;
+}
+
+/**
  * Reads what the user typed into a number box.
  * Accepts Arabic-Indic digits (٠١٢), Persian digits (۰۱۲), and a comma or the
  * Arabic decimal mark (٫) as the decimal separator.

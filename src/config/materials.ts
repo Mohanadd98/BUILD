@@ -95,6 +95,37 @@ export const MATERIALS = {
      */
     mortarWastePercent: 10,
   },
+
+  plaster: {
+    /**
+     * Default total plaster thickness (the user can change it on screen).
+     * SOURCE: common Egyptian site practice, about 2 cm inside and 2.5 cm
+     *   outside, where walls are more uneven and weather exposed.
+     * STATUS: Practice. Check against the project specification.
+     */
+    thicknessCm: { internal: 2, external: 2.5 },
+    /**
+     * Cement-sand plaster per 1 m³ of wet mortar: 1 m³ sand + 300 kg cement.
+     * Sand volume is taken equal to the mortar volume (cement fills voids).
+     * SOURCE: common Egyptian bill of quantities practice.
+     * STATUS: Practice. Check against the project specification.
+     */
+    mortar: { cementKgPerM3: 300, sandM3PerM3: 1.0 },
+    /**
+     * Spatter coat (طرطشة): a thin, cement rich first coat thrown onto the
+     * wall so the plaster bonds. Calculated separately and added to the totals.
+     * SOURCE: common site practice of about 5 mm with a rich mix of roughly
+     *   450 kg cement per 1 m³ of sand.
+     * STATUS: Practice, NOT verified against a written Egyptian source.
+     *   Replace with your project specification values before relying on it.
+     */
+    spatter: { thicknessCm: 0.5, cementKgPerM3: 450, sandM3PerM3: 1.0 },
+    /**
+     * Extra mortar for droppings and filling uneven walls.
+     * SOURCE: general estimating allowance. STATUS: Practice.
+     */
+    defaultWastePercent: 10,
+  },
 } as const;
 
 export type MaterialSettings = typeof MATERIALS;

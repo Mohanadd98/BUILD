@@ -1,4 +1,4 @@
-import { fmt, parseNumber } from '@/calc/format';
+import { fmt, ltr, parseNumber } from '@/calc/format';
 
 describe('parseNumber', () => {
   it.each([
@@ -24,5 +24,11 @@ describe('fmt', () => {
     expect(fmt(3.1)).toBe('3.1');
     expect(fmt(3)).toBe('3');
     expect(fmt(1.23456, 3)).toBe('1.235');
+  });
+});
+
+describe('ltr', () => {
+  it('wraps text in left-to-right isolate marks', () => {
+    expect(ltr('5 mm')).toBe('\u20665 mm\u2069');
   });
 });

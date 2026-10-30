@@ -1,7 +1,7 @@
 import { useState } from 'react';
 
 import { calcBlocks, type BlockPreset, type BlockSize, type WallType } from '@/calc/blocks';
-import { fmt, parseNumber } from '@/calc/format';
+import { fmt, ltr, parseNumber } from '@/calc/format';
 import { AppText, BigButton, Card, Choice, FormulaBox, NumberField, ResultRow, Screen } from '@/components/ui';
 import { MATERIALS } from '@/config/materials';
 import { usePrefs } from '@/state/preferences';
@@ -43,8 +43,7 @@ export default function BlocksScreen() {
     wallType: effectiveWallType,
   });
 
-  // Wrapped in left-to-right isolate marks so Arabic text does not reverse "25×12×6".
-  const size = (b: BlockSize) => `\u2066${b.lengthCm}×${b.widthCm}×${b.heightCm}\u2069`;
+  const size = (b: BlockSize) => ltr(`${b.lengthCm}×${b.widthCm}×${b.heightCm}`);
 
   const clear = () => {
     setLength('');
@@ -96,14 +95,14 @@ export default function BlocksScreen() {
             <AppText variant="label" style={{ fontWeight: '700' }}>{t('common.result')}</AppText>
             <ResultRow label={t('blocks.netArea')} value={fmt(result.netAreaM2)} unit="m²" />
             <ResultRow
-              label={`${t('blocks.count')} (${fmt(result.blocksPerM2, 1)} /m²)`}
+              label={`${t('blocks.count')} (${ltr(`${fmt(result.blocksPerM2, 1)} /m²`)})`}
               value={String(result.blocks)}
               unit={t('blocks.units')}
             />
             <ResultRow label={t('blocks.thickness')} value={fmt(result.wallThicknessM * 100, 1)} unit="cm" />
             <ResultRow label={t('blocks.mortar')} value={fmt(result.orderMortarM3, 3)} unit="m³" />
             <ResultRow
-              label={`${t('concrete.cement')} (${fmt(result.cementKg, 0)} kg)`}
+              label={`${t('concrete.cement')} (${ltr(`${fmt(result.cementKg, 0)} kg`)})`}
               value={String(result.cementBags)}
               unit={t('concrete.bags')}
             />

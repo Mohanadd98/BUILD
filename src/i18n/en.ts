@@ -6,6 +6,7 @@ export const en = {
   'home.soon': 'Coming next',
   'home.blocks': 'Bricks and blocks',
   'home.blocks.hint': 'Walls, mortar',
+  'home.plaster.hint': 'Walls and ceilings, spatter coat',
   'home.plaster': 'Plaster',
   'home.tiles': 'Tiles',
   'home.paint': 'Paint',
@@ -22,6 +23,8 @@ export const en = {
   'common.formula': 'How this was calculated',
   'common.enterValues': 'Enter all dimensions above to see the result.',
   'common.waste': 'Waste allowance',
+  'common.yes': 'Yes',
+  'common.no': 'No',
   'common.reset': 'Clear',
   'common.sourceNote': 'Mix values come from the settings file. Check them against your project specification.',
 
@@ -74,6 +77,25 @@ export const en = {
   'blocks.step.mortarOrder': 'Mortar with waste',
   'blocks.step.cement': 'Cement and bags',
   'blocks.step.sand': 'Sand',
+
+  'plaster.title': 'Plaster',
+  'plaster.side': 'Wall side',
+  'plaster.internal': 'Inside',
+  'plaster.external': 'Outside',
+  'plaster.spatter': 'Spatter coat',
+  'plaster.area': 'Wall area',
+  'plaster.thickness': 'Plaster thickness',
+  'plaster.plasterMortar': 'Plaster mortar (with waste)',
+  'plaster.spatterMortar': 'Spatter coat mortar (with waste)',
+  'plaster.totalCement': 'Total cement',
+  'plaster.totalSand': 'Total sand',
+  'plaster.legend': 'P = plaster coat, T = spatter coat, A = area, t = thickness.',
+  'plaster.step.plaster': 'Plaster coat volume',
+  'plaster.step.plasterMaterials': 'Plaster coat cement and sand',
+  'plaster.step.spatter': 'Spatter coat volume',
+  'plaster.step.spatterMaterials': 'Spatter coat cement and sand',
+  'plaster.step.cement': 'Total cement and bags',
+  'plaster.step.sand': 'Total sand',
 } as const;
 
 export type TKey = keyof typeof en;
