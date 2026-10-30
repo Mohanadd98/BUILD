@@ -3,6 +3,9 @@ import { StatusBar } from 'expo-status-bar';
 
 import { PreferencesProvider, usePrefs } from '@/state/preferences';
 import { ProjectsProvider } from '@/state/projects';
+import { initRTL } from '@/state/rtl';
+
+initRTL();
 
 function AppStack() {
   const { t, colors, isDark } = usePrefs();

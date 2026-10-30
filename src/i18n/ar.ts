@@ -18,6 +18,7 @@ export const ar: Record<TKey, string> = {
 
   'settings.title': 'الإعدادات',
   'settings.language': 'اللغة',
+  'settings.languageNote': 'يُعاد تشغيل التطبيق لحظياً للتبديل بين الاتجاه من اليمين لليسار ومن اليسار لليمين.',
   'settings.theme': 'المظهر',
   'settings.theme.system': 'تلقائي',
   'settings.theme.light': 'فاتح',

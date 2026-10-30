@@ -16,6 +16,7 @@ export const en = {
 
   'settings.title': 'Settings',
   'settings.language': 'Language',
+  'settings.languageNote': 'The app restarts briefly to switch between right-to-left and left-to-right.',
   'settings.theme': 'Appearance',
   'settings.theme.system': 'Automatic',
   'settings.theme.light': 'Light',
