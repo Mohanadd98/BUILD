@@ -7,6 +7,8 @@ import { ar } from '@/i18n/ar';
 import { en, type TKey } from '@/i18n/en';
 import { palette, type Colors } from '@/theme/colors';
 
+import { applyDirection } from './rtl';
+
 export type Lang = 'en' | 'ar';
 export type ThemePref = 'system' | 'light' | 'dark';
 
@@ -50,6 +52,15 @@ export function PreferencesProvider({ children }: { children: ReactNode }) {
   useEffect(() => {
     if (loaded) AsyncStorage.setItem(STORAGE_KEY, JSON.stringify(prefs)).catch(() => {});
   }, [prefs, loaded]);
+
+  // Flip the native layout (header, back button, swipe gesture) to match the language.
+  useEffect(() => {
+    if (!loaded) return;
+    applyDirection(prefs.lang === 'ar', () =>
+      AsyncStorage.setItem(STORAGE_KEY, JSON.stringify(prefs)).catch(() => {}),
+    ).catch(() => {});
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, [prefs.lang, loaded]);
 
   const value = useMemo<PrefsContext>(() => {
     const isDark = prefs.themePref === 'system' ? scheme === 'dark' : prefs.themePref === 'dark';

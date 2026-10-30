@@ -1,4 +1,4 @@
-import { Choice, Screen } from '@/components/ui';
+import { AppText, Choice, Screen } from '@/components/ui';
 import { usePrefs, type Lang, type ThemePref } from '@/state/preferences';
 
 export default function Settings() {
@@ -14,6 +14,7 @@ export default function Settings() {
           { value: 'en', label: 'English' },
         ]}
       />
+      <AppText variant="muted">{t('settings.languageNote')}</AppText>
       <Choice<ThemePref>
         label={t('settings.theme')}
         value={themePref}
