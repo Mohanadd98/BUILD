@@ -11,12 +11,48 @@ export function zoneOf(mix: ConcreteMix, settings: MaterialSettings = MATERIALS)
   return (Object.keys(zones) as ConcreteZone[]).find((z) => (zones[z] as readonly string[]).includes(mix)) ?? 'normal';
 }
 
+export type CementType = 'cemI' | 'cemIII';
+
 export interface ConcreteInput {
   lengthM: number;
   widthM: number;
   thicknessCm: number;
   mix: ConcreteMix;
   wastePercent: number;
+  /** Cement used; CEM III only changes the limits where the code allows it. Default CEM I. */
+  cement?: CementType;
+}
+
+/** True when the code allows the CEM III reductions for this concrete type. */
+export function cemIIIApplies(mix: ConcreteMix, settings: MaterialSettings = MATERIALS): boolean {
+  return (settings.concrete.cemIIIReduction.appliesTo as readonly string[]).includes(mix);
+}
+
+export interface ConcreteLimits {
+  cementKgPerM3: number;
+  minFcu: number;
+  maxWc: number | null;
+  /** True when the CEM III reductions were applied. */
+  reduced: boolean;
+}
+
+/** Cement content and code limits for a concrete type and cement. */
+export function concreteLimits(
+  mix: ConcreteMix,
+  cement: CementType = 'cemI',
+  settings: MaterialSettings = MATERIALS,
+): ConcreteLimits {
+  const m = settings.concrete.mixes[mix];
+  if (cement !== 'cemIII' || !cemIIIApplies(mix, settings)) {
+    return { cementKgPerM3: m.cementKgPerM3, minFcu: m.minFcu, maxWc: m.maxWc, reduced: false };
+  }
+  const r = settings.concrete.cemIIIReduction;
+  return {
+    cementKgPerM3: m.cementKgPerM3 - r.cementKgPerM3,
+    minFcu: m.minFcu - r.minFcu,
+    maxWc: m.maxWc === null ? null : Number((m.maxWc + r.maxWc).toFixed(2)),
+    reduced: true,
+  };
 }
 
 export interface ConcreteResult {
@@ -36,13 +72,18 @@ export interface ConcreteResult {
  * The code limits that go with a concrete type, written left to right,
  * e.g. "fcu ≥ 30 N/mm² · w/c ≤ 0.5 (0.55 foundations) · ECP 203-2025 Table 2-21".
  */
-export function codeRequirement(mix: ConcreteMix, settings: MaterialSettings = MATERIALS): string {
+export function codeRequirement(
+  mix: ConcreteMix,
+  cement: CementType = 'cemI',
+  settings: MaterialSettings = MATERIALS,
+): string {
   const m = settings.concrete.mixes[mix];
-  const parts = [`fcu ≥ ${m.minFcu} N/mm²`];
-  if (m.maxWc !== null) {
-    parts.push(`w/c ≤ ${m.maxWc}${m.maxWcFoundations !== null ? ` (${m.maxWcFoundations} foundations)` : ''}`);
+  const lim = concreteLimits(mix, cement, settings);
+  const parts = [`fcu ≥ ${lim.minFcu} N/mm²`];
+  if (lim.maxWc !== null) {
+    parts.push(`w/c ≤ ${lim.maxWc}${m.maxWcFoundations !== null ? ` (${m.maxWcFoundations} foundations)` : ''}`);
   }
-  parts.push(`ECP 203-2025 ${m.ref}`);
+  parts.push(`ECP 203-2025 ${m.ref}${lim.reduced ? ' note, CEM III' : ''}`);
   return parts.join(' · ');
 }
 
@@ -51,18 +92,19 @@ export function calcConcrete(
   input: ConcreteInput,
   settings: MaterialSettings = MATERIALS,
 ): ConcreteResult | null {
-  const { lengthM, widthM, thicknessCm, mix, wastePercent } = input;
+  const { lengthM, widthM, thicknessCm, mix, wastePercent, cement = 'cemI' } = input;
   if (!(lengthM > 0 && widthM > 0 && thicknessCm > 0)) return null;
   if (!(wastePercent >= 0 && wastePercent < 100)) return null;
 
   const m = settings.concrete.mixes[mix];
+  const lim = concreteLimits(mix, cement, settings);
   const bagKg = settings.cementBagKg;
   const thicknessM = thicknessCm / 100;
   const wasteFactor = 1 + wastePercent / 100;
 
   const volumeM3 = lengthM * widthM * thicknessM;
   const orderVolumeM3 = volumeM3 * wasteFactor;
-  const cementKg = orderVolumeM3 * m.cementKgPerM3;
+  const cementKg = orderVolumeM3 * lim.cementKgPerM3;
   const cementBags = Math.ceil(cementKg / bagKg - 1e-9);
   const sandM3 = orderVolumeM3 * m.sandM3PerM3;
   const gravelM3 = orderVolumeM3 * m.gravelM3PerM3;
@@ -78,7 +120,9 @@ export function calcConcrete(
     },
     {
       labelKey: 'concrete.step.cement',
-      expr: `C = V' × ${m.cementKgPerM3} kg/m³ = ${fmt(cementKg, 1)} kg`,
+      expr: lim.reduced
+        ? `C = V' × (${m.cementKgPerM3} − ${settings.concrete.cemIIIReduction.cementKgPerM3}) kg/m³ = ${fmt(cementKg, 1)} kg`
+        : `C = V' × ${m.cementKgPerM3} kg/m³ = ${fmt(cementKg, 1)} kg`,
     },
     {
       labelKey: 'concrete.step.bags',

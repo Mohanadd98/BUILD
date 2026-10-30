@@ -45,6 +45,8 @@ export const ar: Record<TKey, string> = {
   'concrete.zoneNote.chloride': 'يُستخدم أسمنت \u2066CEM\u00A0I\u2069 أو \u2066CEM\u00A0III\u2069 (ويُفضل \u2066CEM\u00A0III/A\u2069 أو \u2066III/B\u2069 مع دورات البلل والجفاف). لا يُسمح بأسمنت \u2066CEM\u00A0II/A-L\u2069 و \u2066II/A-LL\u2069 و \u2066II/A-P\u2069 و \u2066IV/A-SR\u2069 (الكود المصري ٢٠٣-٢٠٢٥ بند ٢-٣-٤-٢-١١).',
   'concrete.zoneNote.seawater': 'يُفضل أسمنت \u2066CEM\u00A0III/A\u2069 أو \u2066CEM\u00A0III/B\u2069. لا يُسمح بأسمنت \u2066CEM\u00A0II/A-L\u2069 و \u2066II/A-LL\u2069 و \u2066II/A-P\u2069 و \u2066IV/A-SR\u2069 (الكود المصري ٢٠٣-٢٠٢٥ بند ٢-٣-٤-٢-١٢).',
   'concrete.mix': 'ظروف التعرض',
+  'concrete.cementType': 'نوع الأسمنت',
+  'concrete.cemIIINote': 'تم تطبيق تخفيضات أسمنت \u2066CEM\u00A0III\u2069: محتوى الأسمنت أقل بمقدار ٢٥ كجم/م³، والمقاومة المميزة أقل بمقدار ٢,٥ ن/مم²، ونسبة الماء للأسمنت أعلى بمقدار ٠,٠٥، مع نفس سمك الغطاء الخرساني (الكود المصري ٢٠٣-٢٠٢٥ ملاحظة جدول ٢-٢٢).',
   'concrete.mix.plain': 'عادية',
   'concrete.mix.reinforced': 'مسلحة',
   'concrete.mix.dry': 'جافة / داخلية',

@@ -43,6 +43,8 @@ export const en = {
   'concrete.zoneNote.chloride': 'Use CEM\u00A0I or CEM\u00A0III (CEM\u00A0III/A or III/B preferred with wetting and drying). CEM\u00A0II/A-L, II/A-LL, II/A-P and IV/A-SR are not allowed (ECP 203-2025 cl. 2-3-4-2-11).',
   'concrete.zoneNote.seawater': 'CEM\u00A0III/A or CEM\u00A0III/B is preferred. CEM\u00A0II/A-L, II/A-LL, II/A-P and IV/A-SR are not allowed (ECP 203-2025 cl. 2-3-4-2-12).',
   'concrete.mix': 'Exposure condition',
+  'concrete.cementType': 'Cement type',
+  'concrete.cemIIINote': 'CEM III reductions applied: cement 25 kg/m³ less, fcu 2.5 N/mm² less, w/c 0.05 more, same concrete cover (ECP 203-2025 Table 2-22 note).',
   'concrete.mix.plain': 'Plain',
   'concrete.mix.reinforced': 'Reinforced',
   'concrete.mix.dry': 'Dry / indoor',

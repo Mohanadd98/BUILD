@@ -1,4 +1,4 @@
-import { calcConcrete, codeRequirement, zoneOf, type ConcreteMix } from '@/calc/concrete';
+import { calcConcrete, cemIIIApplies, codeRequirement, concreteLimits, zoneOf, type ConcreteMix } from '@/calc/concrete';
 import { MATERIALS } from '@/config/materials';
 
 describe('calcConcrete', () => {
@@ -64,6 +64,28 @@ describe('calcConcrete', () => {
     expect(codeRequirement('chlorideWetDry')).toBe('fcu ≥ 40 N/mm² · w/c ≤ 0.4 · ECP 203-2025 Table 2-22');
     expect(codeRequirement('seaInSitu')).toBe('fcu ≥ 40 N/mm² · w/c ≤ 0.45 · ECP 203-2025 Table 2-23');
     expect(codeRequirement('seaTidal')).toBe('fcu ≥ 45 N/mm² · w/c ≤ 0.4 · ECP 203-2025 Table 2-23');
+  });
+
+  it('applies the Table 2-22 CEM III reductions to the chloride classes', () => {
+    expect(concreteLimits('chlorideModerate', 'cemIII')).toEqual({ cementKgPerM3: 325, minFcu: 27.5, maxWc: 0.55, reduced: true });
+    expect(concreteLimits('chlorideWet', 'cemIII')).toEqual({ cementKgPerM3: 350, minFcu: 32.5, maxWc: 0.5, reduced: true });
+    expect(concreteLimits('chlorideWetDry', 'cemIII')).toEqual({ cementKgPerM3: 375, minFcu: 37.5, maxWc: 0.45, reduced: true });
+    // 3.15 m³ × 375 = 1181.25 kg -> 24 bags (CEM I would be 400 kg/m³ -> 26 bags)
+    const r = calcConcrete({ ...slab, mix: 'chlorideWetDry', cement: 'cemIII' })!;
+    expect(r.cementKg).toBeCloseTo(1181.25, 6);
+    expect(r.cementBags).toBe(24);
+    expect(r.steps[2].expr).toBe("C = V' × (400 − 25) kg/m³ = 1181.3 kg");
+    expect(codeRequirement('chlorideWetDry', 'cemIII')).toBe(
+      'fcu ≥ 37.5 N/mm² · w/c ≤ 0.45 · ECP 203-2025 Table 2-22 note, CEM III',
+    );
+  });
+
+  it('does not reduce seawater or normal classes for CEM III', () => {
+    for (const mix of ['normal', 'dry', 'wetDry', 'seaAir', 'seaTidal', 'plain'] as ConcreteMix[]) {
+      expect(cemIIIApplies(mix)).toBe(false);
+      expect(concreteLimits(mix, 'cemIII').reduced).toBe(false);
+      expect(calcConcrete({ ...slab, mix, cement: 'cemIII' })!.cementKg).toBeCloseTo(calcConcrete({ ...slab, mix })!.cementKg, 9);
+    }
   });
 
   it('lists every concrete type in exactly one zone', () => {

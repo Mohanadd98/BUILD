@@ -1,6 +1,14 @@
 import { useState } from 'react';
 
-import { calcConcrete, codeRequirement, zoneOf, type ConcreteMix, type ConcreteZone } from '@/calc/concrete';
+import {
+  calcConcrete,
+  codeRequirement,
+  concreteLimits,
+  zoneOf,
+  type CementType,
+  type ConcreteMix,
+  type ConcreteZone,
+} from '@/calc/concrete';
 import { fmt, ltr, parseNumber } from '@/calc/format';
 import { SaveButton } from '@/components/save-button';
 import { AppText, BigButton, Card, Choice, FormulaBox, NumberField, ResultRow, Screen } from '@/components/ui';
@@ -8,7 +16,6 @@ import { MATERIALS } from '@/config/materials';
 import { usePrefs } from '@/state/preferences';
 
 const initialWaste = String(MATERIALS.concrete.defaultWastePercent);
-const mixes = MATERIALS.concrete.mixes;
 const zones = MATERIALS.concrete.zones;
 const zoneOrder: ConcreteZone[] = ['normal', 'chloride', 'seawater', 'plain'];
 
@@ -19,8 +26,12 @@ export default function ConcreteScreen() {
   const [thickness, setThickness] = useState('');
   const [waste, setWaste] = useState(initialWaste);
   const [mix, setMix] = useState<ConcreteMix>('normal');
+  const [cementType, setCementType] = useState<CementType>('cemI');
   const zone = zoneOf(mix);
   const zoneMixes = zones[zone] as readonly ConcreteMix[];
+  // CEM III changes the limits only in the chloride zone (ECP 203-2025 Table 2-22 note).
+  const cement: CementType = zone === 'chloride' ? cementType : 'cemI';
+  const limits = concreteLimits(mix, cement);
 
   const result = calcConcrete({
     lengthM: parseNumber(length) ?? 0,
@@ -28,6 +39,7 @@ export default function ConcreteScreen() {
     thicknessCm: parseNumber(thickness) ?? 0,
     wastePercent: parseNumber(waste) ?? -1,
     mix,
+    cement,
   });
 
   const clear = () => {
@@ -45,6 +57,17 @@ export default function ConcreteScreen() {
         onChange={(z) => setMix(zones[z][0])}
         options={zoneOrder.map((z) => ({ value: z, label: t(`concrete.zone.${z}`) }))}
       />
+      {zone === 'chloride' ? (
+        <Choice<CementType>
+          label={t('concrete.cementType')}
+          value={cementType}
+          onChange={setCementType}
+          options={[
+            { value: 'cemI', label: ltr('CEM I') },
+            { value: 'cemIII', label: ltr('CEM III/A, III/B') },
+          ]}
+        />
+      ) : null}
       {zoneMixes.length > 1 ? (
         <Choice<ConcreteMix>
           label={t('concrete.mix')}
@@ -53,13 +76,14 @@ export default function ConcreteScreen() {
           stacked
           options={zoneMixes.map((m) => ({
             value: m,
-            label: `${t(`concrete.mix.${m}`)}\n${ltr(`${mixes[m].cementKgPerM3} kg/m³`)}`,
+            label: `${t(`concrete.mix.${m}`)}\n${ltr(`${concreteLimits(m, cement).cementKgPerM3} kg/m³`)}`,
           }))}
         />
       ) : null}
       {zone === 'chloride' || zone === 'seawater' ? (
         <AppText variant="muted">{t(`concrete.zoneNote.${zone}`)}</AppText>
       ) : null}
+      {limits.reduced ? <AppText variant="muted">{t('concrete.cemIIINote')}</AppText> : null}
       <NumberField label={t('concrete.length')} unit="m" value={length} onChangeText={setLength} />
       <NumberField label={t('concrete.width')} unit="m" value={width} onChangeText={setWidth} />
       <NumberField label={t('concrete.thickness')} unit="cm" value={thickness} onChangeText={setThickness} />
@@ -79,7 +103,7 @@ export default function ConcreteScreen() {
             <ResultRow label={t('concrete.sand')} value={fmt(result.sandM3)} unit="m³" />
             <ResultRow label={t('concrete.gravel')} value={fmt(result.gravelM3)} unit="m³" />
             <AppText variant="muted">{t('concrete.codeReq')}</AppText>
-            <AppText ltr variant="label">{codeRequirement(mix)}</AppText>
+            <AppText ltr variant="label">{codeRequirement(mix, cement)}</AppText>
           </Card>
           <AppText variant="muted">{t('concrete.estimateNote')}</AppText>
           <SaveButton
@@ -88,6 +112,9 @@ export default function ConcreteScreen() {
               inputs: [
                 { labelKey: 'concrete.zone', valueKey: `concrete.zone.${zone}` },
                 { labelKey: 'concrete.mix', valueKey: `concrete.mix.${mix}` },
+                ...(zone === 'chloride'
+                  ? [{ labelKey: 'concrete.cementType', value: cement === 'cemIII' ? 'CEM III/A, III/B' : 'CEM I' }]
+                  : []),
                 { labelKey: 'concrete.length', value: length.trim(), unit: 'm' },
                 { labelKey: 'concrete.width', value: width.trim(), unit: 'm' },
                 { labelKey: 'concrete.thickness', value: thickness.trim(), unit: 'cm' },
@@ -100,7 +127,7 @@ export default function ConcreteScreen() {
                 { labelKey: 'concrete.step.cement', value: fmt(result.cementKg, 0), unit: 'kg' },
                 { labelKey: 'concrete.sand', value: fmt(result.sandM3), unit: 'm³' },
                 { labelKey: 'concrete.gravel', value: fmt(result.gravelM3), unit: 'm³' },
-                { labelKey: 'concrete.codeReq', value: codeRequirement(mix) },
+                { labelKey: 'concrete.codeReq', value: codeRequirement(mix, cement) },
               ],
               steps: result.steps,
             })}

@@ -56,9 +56,10 @@ export const MATERIALS = {
      *   chlorideWetDry    400 kg/m³, w/c <= 0.40, fcu >= 40: wetting and
      *                     drying with chlorides (bridges sprayed with
      *                     chloride water, pavements, car park slabs).
-     *   With CEM III/A or CEM III/B the table footnote allows fcu 2.5 N/mm²
-     *   lower, cement content 25 kg/m³ lower and w/c 0.05 higher; the app
-     *   uses the CEM I values.
+     *   Values are for CEM I. With CEM III/A or CEM III/B the footnote to
+     *   Table 2-22 allows fcu 2.5 N/mm² lower, cement content 25 kg/m³ lower
+     *   and w/c 0.05 higher, with the same concrete cover; see
+     *   `cemIIIReduction` below. Tables 2-21 and 2-23 have no such note.
      *
      * Reinforced concrete exposed to seawater or combined attack (ECP
      * 203-2025 Table 2-23, p. 2-34; clause 2-3-4-2-12, p. 2-33):
@@ -131,6 +132,17 @@ export const MATERIALS = {
         cementKgPerM3: 425, sandM3PerM3: 0.4, gravelM3PerM3: 0.8,
         minFcu: 45, maxWc: 0.4, maxWcFoundations: null, ref: 'Table 2-23',
       },
+    },
+    /**
+     * Reductions allowed when CEM III/A or CEM III/B is used instead of CEM I.
+     * SOURCE: ECP 203-2025, footnote to Table 2-22 (p. 2-33). STATUS: Code.
+     * Applies only to the chloride classes listed in `appliesTo`.
+     */
+    cemIIIReduction: {
+      appliesTo: ['chlorideModerate', 'chlorideWet', 'chlorideWetDry'],
+      cementKgPerM3: 25,
+      minFcu: 2.5,
+      maxWc: 0.05,
     },
     /** Screen grouping of the types above, first type is the zone's default. */
     zones: {
