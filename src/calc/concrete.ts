@@ -25,6 +25,20 @@ export interface ConcreteResult {
   steps: Step[];
 }
 
+/**
+ * The code limits that go with a concrete type, written left to right,
+ * e.g. "fcu ≥ 30 N/mm² · w/c ≤ 0.5 (0.55 foundations) · ECP 203-2025 Table 2-21".
+ */
+export function codeRequirement(mix: ConcreteMix, settings: MaterialSettings = MATERIALS): string {
+  const m = settings.concrete.mixes[mix];
+  const parts = [`fcu ≥ ${m.minFcu} N/mm²`];
+  if (m.maxWc !== null) {
+    parts.push(`w/c ≤ ${m.maxWc}${m.maxWcFoundations !== null ? ` (${m.maxWcFoundations} foundations)` : ''}`);
+  }
+  parts.push(`ECP 203-2025 ${m.ref}`);
+  return parts.join(' · ');
+}
+
 /** Returns null when any dimension is missing, zero or negative. */
 export function calcConcrete(
   input: ConcreteInput,

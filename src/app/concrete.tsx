@@ -1,6 +1,6 @@
 import { useState } from 'react';
 
-import { calcConcrete, type ConcreteMix } from '@/calc/concrete';
+import { calcConcrete, codeRequirement, type ConcreteMix } from '@/calc/concrete';
 import { fmt, ltr, parseNumber } from '@/calc/format';
 import { SaveButton } from '@/components/save-button';
 import { AppText, BigButton, Card, Choice, FormulaBox, NumberField, ResultRow, Screen } from '@/components/ui';
@@ -8,6 +8,8 @@ import { MATERIALS } from '@/config/materials';
 import { usePrefs } from '@/state/preferences';
 
 const initialWaste = String(MATERIALS.concrete.defaultWastePercent);
+const mixes = MATERIALS.concrete.mixes;
+const mixOrder: ConcreteMix[] = ['dry', 'normal', 'wetDry', 'plain'];
 
 export default function ConcreteScreen() {
   const { t } = usePrefs();
@@ -15,7 +17,7 @@ export default function ConcreteScreen() {
   const [width, setWidth] = useState('');
   const [thickness, setThickness] = useState('');
   const [waste, setWaste] = useState(initialWaste);
-  const [mix, setMix] = useState<ConcreteMix>('reinforced');
+  const [mix, setMix] = useState<ConcreteMix>('normal');
 
   const result = calcConcrete({
     lengthM: parseNumber(length) ?? 0,
@@ -38,10 +40,10 @@ export default function ConcreteScreen() {
         label={t('concrete.mix')}
         value={mix}
         onChange={setMix}
-        options={[
-          { value: 'plain', label: t('concrete.mix.plain') },
-          { value: 'reinforced', label: t('concrete.mix.reinforced') },
-        ]}
+        options={mixOrder.map((m) => ({
+          value: m,
+          label: `${t(`concrete.mix.${m}`)}\n${ltr(`${mixes[m].cementKgPerM3} kg/m³`)}`,
+        }))}
       />
       <NumberField label={t('concrete.length')} unit="m" value={length} onChangeText={setLength} />
       <NumberField label={t('concrete.width')} unit="m" value={width} onChangeText={setWidth} />
@@ -61,7 +63,10 @@ export default function ConcreteScreen() {
             />
             <ResultRow label={t('concrete.sand')} value={fmt(result.sandM3)} unit="m³" />
             <ResultRow label={t('concrete.gravel')} value={fmt(result.gravelM3)} unit="m³" />
+            <AppText variant="muted">{t('concrete.codeReq')}</AppText>
+            <AppText ltr variant="label">{codeRequirement(mix)}</AppText>
           </Card>
+          <AppText variant="muted">{t('concrete.estimateNote')}</AppText>
           <SaveButton
             build={() => ({
               tool: 'concrete',
@@ -79,6 +84,7 @@ export default function ConcreteScreen() {
                 { labelKey: 'concrete.step.cement', value: fmt(result.cementKg, 0), unit: 'kg' },
                 { labelKey: 'concrete.sand', value: fmt(result.sandM3), unit: 'm³' },
                 { labelKey: 'concrete.gravel', value: fmt(result.gravelM3), unit: 'm³' },
+                { labelKey: 'concrete.codeReq', value: codeRequirement(mix) },
               ],
               steps: result.steps,
             })}

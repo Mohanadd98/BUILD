@@ -36,15 +36,17 @@ export const MATERIALS = {
      *   Egyptian Code for Design and Construction of Concrete Structures,
      *   ECP 203-2025 (sixth update), Ministerial Decree No. 894 of 2025, Cairo.
      *
-     * reinforced cementKgPerM3 = 350
-     *   STATUS: Code. ECP 203-2025 Table 2-21 (p. 2-32), minimum cement content
-     *   for reinforced concrete in moderate humidity (50 to 70 % RH) and for
-     *   elements in contact with water such as foundations; the same table
-     *   requires w/c <= 0.50 (0.55 for foundations) and fcu >= 30 N/mm².
-     *   Other exposures in Table 2-21: dry (30 to 50 % RH) 325 kg/m³,
-     *   repeated wetting and drying 375 kg/m³. Chloride exposure: Table 2-22
-     *   (p. 2-33), 350 to 400 kg/m³. Seawater: Table 2-23 (p. 2-34), 375 to
-     *   425 kg/m³.
+     * Reinforced concrete, by exposure (ECP 203-2025 Table 2-21, p. 2-32,
+     * carbonation exposure). minFcu in N/mm², maxWc = maximum water/cement.
+     *   dry      325 kg/m³, w/c <= 0.60, fcu >= 25: dry (30 to 50 % RH) or
+     *            permanently wet; elements inside buildings with low humidity.
+     *   normal   350 kg/m³, w/c <= 0.50, fcu >= 30: moderate humidity (50 to
+     *            70 % RH); also nearly always wet, rarely dry elements in
+     *            contact with water such as foundations (w/c <= 0.55).
+     *   wetDry   375 kg/m³, w/c <= 0.45, fcu >= 35: repeated wetting and drying.
+     *   STATUS: Code (minimum values).
+     *   Not covered by the app: chloride exposure, Table 2-22 (p. 2-33),
+     *   350 to 400 kg/m³; seawater, Table 2-23 (p. 2-34), 375 to 425 kg/m³.
      *
      * plain cementKgPerM3 = 250
      *   STATUS: Practice. ECP 203-2025 gives no cement content for plain
@@ -61,8 +63,22 @@ export const MATERIALS = {
      *   blended cements), ECP 203-2025 clause 2-3-4-2-4 (p. 2-30).
      */
     mixes: {
-      plain: { cementKgPerM3: 250, sandM3PerM3: 0.4, gravelM3PerM3: 0.8 },
-      reinforced: { cementKgPerM3: 350, sandM3PerM3: 0.4, gravelM3PerM3: 0.8 },
+      plain: {
+        cementKgPerM3: 250, sandM3PerM3: 0.4, gravelM3PerM3: 0.8,
+        minFcu: 15, maxWc: null, maxWcFoundations: null, ref: 'cl. 2-3-2-1',
+      },
+      dry: {
+        cementKgPerM3: 325, sandM3PerM3: 0.4, gravelM3PerM3: 0.8,
+        minFcu: 25, maxWc: 0.6, maxWcFoundations: null, ref: 'Table 2-21',
+      },
+      normal: {
+        cementKgPerM3: 350, sandM3PerM3: 0.4, gravelM3PerM3: 0.8,
+        minFcu: 30, maxWc: 0.5, maxWcFoundations: 0.55, ref: 'Table 2-21',
+      },
+      wetDry: {
+        cementKgPerM3: 375, sandM3PerM3: 0.4, gravelM3PerM3: 0.8,
+        minFcu: 35, maxWc: 0.45, maxWcFoundations: null, ref: 'Table 2-21',
+      },
     },
     /**
      * Extra volume ordered to cover spillage, formwork bulging and uneven
