@@ -90,11 +90,64 @@ export function shareText(projectName: string, calc: SavedCalc, t: (key: string)
   ].join('\n');
 }
 
-export async function loadProjects(): Promise<Project[]> {
+function isLine(v: unknown): v is Line {
+  return typeof v === 'object' && v !== null && typeof (v as Line).labelKey === 'string';
+}
+
+function isCalc(v: unknown): v is SavedCalc {
+  const c = v as SavedCalc;
+  return (
+    typeof v === 'object' &&
+    v !== null &&
+    typeof c.id === 'string' &&
+    ['concrete', 'blocks', 'plaster', 'tiles', 'paint'].includes(c.tool) &&
+    typeof c.createdAt === 'number' &&
+    Array.isArray(c.inputs) &&
+    c.inputs.every(isLine) &&
+    Array.isArray(c.results) &&
+    c.results.every(isLine) &&
+    Array.isArray(c.steps) &&
+    c.steps.every((s) => typeof s?.labelKey === 'string' && typeof s?.expr === 'string')
+  );
+}
+
+/**
+ * Reads stored projects, keeping only well-formed entries.
+ * Throws if the stored text is not valid JSON, so the caller never
+ * overwrites data it could not read.
+ */
+export function parseProjects(raw: string | null): Project[] {
+  if (!raw) return [];
+  const data: unknown = JSON.parse(raw);
+  if (!Array.isArray(data)) throw new Error('Stored projects are not a list');
+  return data
+    .filter(
+      (p): p is Project =>
+        typeof p === 'object' &&
+        p !== null &&
+        typeof p.id === 'string' &&
+        typeof p.name === 'string' &&
+        typeof p.createdAt === 'number' &&
+        Array.isArray(p.calcs),
+    )
+    .map((p) => ({ ...p, calcs: p.calcs.filter(isCalc) }));
+}
+
+/**
+ * Loads saved projects. Returns null when they could not be read; the
+ * damaged text is copied to a backup key so it is never silently lost.
+ */
+export async function loadProjects(): Promise<Project[] | null> {
+  let raw: string | null;
   try {
-    const raw = await AsyncStorage.getItem(STORAGE_KEY);
-    return raw ? (JSON.parse(raw) as Project[]) : [];
+    raw = await AsyncStorage.getItem(STORAGE_KEY);
   } catch {
+    return null;
+  }
+  try {
+    return parseProjects(raw);
+  } catch {
+    await AsyncStorage.setItem(`${STORAGE_KEY}.damaged.${Date.now()}`, raw ?? '').catch(() => {});
     return [];
   }
 }

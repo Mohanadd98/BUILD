@@ -41,6 +41,7 @@ export default function SaveScreen() {
       <TextInput
         value={name}
         onChangeText={setName}
+        maxLength={80}
         placeholder={t('save.namePlaceholder')}
         placeholderTextColor={colors.textMuted}
         accessibilityLabel={t('save.newProject')}

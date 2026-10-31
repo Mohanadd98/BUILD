@@ -30,6 +30,8 @@ export function ProjectsProvider({ children }: { children: ReactNode }) {
 
   useEffect(() => {
     loadProjects().then((p) => {
+      // null means storage could not be read: keep saving off so nothing is overwritten.
+      if (p === null) return;
       setProjects(p);
       setLoaded(true);
     });

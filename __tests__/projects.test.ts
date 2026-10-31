@@ -1,6 +1,7 @@
 import {
   addCalc,
   lineParts,
+  parseProjects,
   lineText,
   removeCalc,
   removeProject,
@@ -94,5 +95,31 @@ describe('project storage', () => {
         'Net volume: V = 5 × 4 × 0.15 = 3 m³',
       ].join('\n'),
     );
+  });
+});
+
+describe('reading stored projects', () => {
+  const good = {
+    id: 'p1',
+    name: 'Villa',
+    createdAt: 1,
+    calcs: [{ ...calc('a') }],
+  };
+
+  it('reads well-formed data', () => {
+    expect(parseProjects(JSON.stringify([good]))).toEqual([good]);
+    expect(parseProjects(null)).toEqual([]);
+  });
+
+  it('drops malformed projects and calculations instead of crashing', () => {
+    const bad = [good, { id: 5 }, null, { ...good, id: 'p2', calcs: [{ id: 'x', tool: 'rocket' }, calc('b')] }];
+    const out = parseProjects(JSON.stringify(bad));
+    expect(out.map((p) => p.id)).toEqual(['p1', 'p2']);
+    expect(out[1].calcs.map((c) => c.id)).toEqual(['b']);
+  });
+
+  it('refuses unreadable data so the caller does not overwrite it', () => {
+    expect(() => parseProjects('{not json')).toThrow();
+    expect(() => parseProjects('{"a":1}')).toThrow();
   });
 });

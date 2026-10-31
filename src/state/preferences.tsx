@@ -33,6 +33,15 @@ function deviceLang(): Lang {
   return getLocales()[0]?.languageCode === 'ar' ? 'ar' : 'en';
 }
 
+/** Keeps only valid stored values, so a damaged setting cannot crash the app. */
+export function cleanPrefs(data: unknown): Partial<Prefs> {
+  const d = (typeof data === 'object' && data !== null ? data : {}) as Record<string, unknown>;
+  const out: Partial<Prefs> = {};
+  if (d.lang === 'en' || d.lang === 'ar') out.lang = d.lang;
+  if (d.themePref === 'system' || d.themePref === 'light' || d.themePref === 'dark') out.themePref = d.themePref;
+  return out;
+}
+
 const Ctx = createContext<PrefsContext | null>(null);
 
 export function PreferencesProvider({ children }: { children: ReactNode }) {
@@ -43,7 +52,7 @@ export function PreferencesProvider({ children }: { children: ReactNode }) {
   useEffect(() => {
     AsyncStorage.getItem(STORAGE_KEY)
       .then((raw) => {
-        if (raw) setPrefs((p) => ({ ...p, ...(JSON.parse(raw) as Partial<Prefs>) }));
+        if (raw) setPrefs((p) => ({ ...p, ...cleanPrefs(JSON.parse(raw)) }));
       })
       .catch(() => {})
       .finally(() => setLoaded(true));
