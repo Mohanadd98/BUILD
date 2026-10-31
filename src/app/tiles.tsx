@@ -115,6 +115,11 @@ export default function TilesScreen() {
                 { labelKey: 'tiles.grout', value: fmt(result.groutKg, 1), unit: 'kg' },
               ],
               steps: result.steps,
+              materials: [
+                { item: 'tileBox', qty: result.boxes },
+                { item: 'tileAdhesive', qty: result.adhesiveBags },
+                { item: 'grout', qty: result.groutBags },
+              ],
             })}
           />
           <FormulaBox steps={result.steps} />

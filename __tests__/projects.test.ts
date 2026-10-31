@@ -123,3 +123,28 @@ describe('reading stored projects', () => {
     expect(() => parseProjects('{"a":1}')).toThrow();
   });
 });
+
+describe('reading saved phases and materials', () => {
+  it('keeps valid phases and materials and drops invalid ones', () => {
+    const stored = [
+      {
+        id: 'p1',
+        name: 'Villa',
+        createdAt: 1,
+        calcs: [
+          {
+            ...calc('a'),
+            phase: 'foundations',
+            materials: [{ item: 'cement', qty: 23 }, { item: 'gold', qty: 1 }, { item: 'sand', qty: -2 }, null],
+          },
+          { ...calc('b'), phase: 'roof-garden' },
+        ],
+      },
+    ];
+    const [p] = parseProjects(JSON.stringify(stored));
+    expect(p.calcs[0].phase).toBe('foundations');
+    expect(p.calcs[0].materials).toEqual([{ item: 'cement', qty: 23 }]);
+    expect(p.calcs[1].phase).toBeUndefined();
+    expect(p.calcs[1].materials).toBeUndefined();
+  });
+});

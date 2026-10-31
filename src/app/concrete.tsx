@@ -130,6 +130,11 @@ export default function ConcreteScreen() {
                 { labelKey: 'concrete.codeReq', value: codeRequirement(mix, cement) },
               ],
               steps: result.steps,
+              materials: [
+                { item: 'cement', qty: result.cementBags },
+                { item: 'sand', qty: result.sandM3 },
+                { item: 'gravel', qty: result.gravelM3 },
+              ],
             })}
           />
           <FormulaBox steps={result.steps} />

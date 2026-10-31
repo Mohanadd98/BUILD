@@ -3,7 +3,8 @@ import { useState } from 'react';
 import { Alert, Platform, StyleSheet, TextInput } from 'react-native';
 
 import { SavedLines } from '@/components/saved-lines';
-import { AppText, BigButton, Card, Screen } from '@/components/ui';
+import { defaultPhase, PHASES, type Phase } from '@/calc/boq';
+import { AppText, BigButton, Card, Choice, Screen } from '@/components/ui';
 import type { TKey } from '@/i18n/en';
 import { usePrefs } from '@/state/preferences';
 import { useProjects } from '@/state/projects';
@@ -14,6 +15,7 @@ export default function SaveScreen() {
   const { t, colors, isRTL } = usePrefs();
   const { projects, pending, setPending, save } = useProjects();
   const [name, setName] = useState('');
+  const [phase, setPhase] = useState<Phase | null>(null);
 
   if (!pending) {
     return (
@@ -23,8 +25,10 @@ export default function SaveScreen() {
     );
   }
 
+  const chosenPhase = phase ?? defaultPhase(pending.tool);
+
   const finish = (target: SaveTarget, projectName: string) => {
-    save(target, pending);
+    save(target, { ...pending, phase: chosenPhase });
     setPending(null);
     router.back();
     if (Platform.OS !== 'web') Alert.alert(t('save.done'), projectName);
@@ -36,6 +40,13 @@ export default function SaveScreen() {
         <AppText variant="label" style={{ fontWeight: '700' }}>{t(`${pending.tool}.title` as TKey)}</AppText>
         <SavedLines lines={pending.results} />
       </Card>
+
+      <Choice<Phase>
+        label={t('save.phase')}
+        value={chosenPhase}
+        onChange={setPhase}
+        options={PHASES.map((p) => ({ value: p, label: t(`phase.${p}`) }))}
+      />
 
       <AppText variant="label">{t('save.newProject')}</AppText>
       <TextInput

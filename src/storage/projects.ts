@@ -1,5 +1,6 @@
 import AsyncStorage from '@react-native-async-storage/async-storage';
 
+import { isMaterialKey, isPhase, type MaterialLine, type Phase } from '@/calc/boq';
 import type { Step } from '@/calc/format';
 
 import { getItemMigrating } from './keys';
@@ -27,6 +28,10 @@ export interface SavedCalc {
   inputs: Line[];
   results: Line[];
   steps: Step[];
+  /** Construction phase for the bill of quantities; older saves have none. */
+  phase?: Phase;
+  /** Materials for the bill of quantities; older saves have none. */
+  materials?: MaterialLine[];
 }
 
 export interface Project {
@@ -134,7 +139,16 @@ export function parseProjects(raw: string | null): Project[] {
         typeof p.createdAt === 'number' &&
         Array.isArray(p.calcs),
     )
-    .map((p) => ({ ...p, calcs: p.calcs.filter(isCalc) }));
+    .map((p) => ({
+      ...p,
+      calcs: p.calcs.filter(isCalc).map((c) => ({
+        ...c,
+        phase: isPhase(c.phase) ? c.phase : undefined,
+        materials: Array.isArray(c.materials)
+          ? c.materials.filter((m) => isMaterialKey(m?.item) && typeof m.qty === 'number' && m.qty > 0)
+          : undefined,
+      })),
+    }));
 }
 
 /**

@@ -1,6 +1,8 @@
 import { router, Stack, useLocalSearchParams } from 'expo-router';
 import { Share, View } from 'react-native';
 
+import { defaultPhase } from '@/calc/boq';
+import { BoqCard } from '@/components/boq-card';
 import { confirm } from '@/components/confirm';
 import { SavedLines } from '@/components/saved-lines';
 import { AppText, BigButton, Card, FormulaBox, Screen } from '@/components/ui';
@@ -30,13 +32,13 @@ export default function ProjectScreen() {
   return (
     <Screen>
       <Stack.Screen options={{ title: project.name }} />
-      {project.calcs.length === 0 ? <AppText variant="muted">{t('projects.noCalcs')}</AppText> : null}
+      {project.calcs.length === 0 ? <AppText variant="muted">{t('projects.noCalcs')}</AppText> : <BoqCard project={project} />}
 
       {project.calcs.map((c) => (
         <View key={c.id} style={{ gap: sizes.gap }}>
           <Card>
             <AppText variant="title" style={{ fontSize: 22 }}>{t(`${c.tool}.title` as TKey)}</AppText>
-            <AppText variant="muted">{dateOf(c.createdAt)}</AppText>
+            <AppText variant="muted">{`${t(`phase.${c.phase ?? defaultPhase(c.tool)}`)} · ${dateOf(c.createdAt)}`}</AppText>
             <SavedLines lines={c.inputs} muted />
             <AppText variant="label" style={{ fontWeight: '700' }}>{t('common.result')}</AppText>
             <SavedLines lines={c.results} />

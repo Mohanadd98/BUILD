@@ -95,6 +95,10 @@ export default function PlasterScreen() {
                 { labelKey: 'plaster.totalSand', value: fmt(result.sandM3, 3), unit: 'm³' },
               ],
               steps: result.steps,
+              materials: [
+                { item: 'cement', qty: result.cementBags },
+                { item: 'sand', qty: result.sandM3 },
+              ],
             })}
           />
           <FormulaBox steps={result.steps} />

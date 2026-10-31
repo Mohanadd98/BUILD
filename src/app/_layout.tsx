@@ -2,6 +2,7 @@ import { Stack } from 'expo-router';
 import { StatusBar } from 'expo-status-bar';
 
 import { PreferencesProvider, usePrefs } from '@/state/preferences';
+import { PricesProvider } from '@/state/prices';
 import { ProjectsProvider } from '@/state/projects';
 import { initRTL } from '@/state/rtl';
 
@@ -29,6 +30,7 @@ function AppStack() {
         <Stack.Screen name="save" options={{ title: t('save.title'), presentation: 'modal' }} />
         <Stack.Screen name="projects" options={{ title: t('projects.title') }} />
         <Stack.Screen name="project/[id]" options={{ title: '' }} />
+        <Stack.Screen name="prices" options={{ title: t('prices.title') }} />
         <Stack.Screen name="settings" options={{ title: t('settings.title') }} />
       </Stack>
     </>
@@ -39,7 +41,9 @@ export default function RootLayout() {
   return (
     <PreferencesProvider>
       <ProjectsProvider>
-        <AppStack />
+        <PricesProvider>
+          <AppStack />
+        </PricesProvider>
       </ProjectsProvider>
     </PreferencesProvider>
   );

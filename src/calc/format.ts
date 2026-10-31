@@ -20,6 +20,16 @@ export function ltr(text: string): string {
 }
 
 /**
+ * A number with its unit for display. Latin units (m³, kg, EGP) are kept left
+ * to right; Arabic units (شيكارة, ج.م) are left to the paragraph so Arabic
+ * reads "23 شيكارة" and not "شيكارة 23".
+ */
+export function withUnit(value: string, unit: string): string {
+  const text = `${value} ${unit}`;
+  return /[\u0600-\u06FF]/.test(unit) ? text : ltr(text);
+}
+
+/**
  * Reads what the user typed into a number box.
  * Accepts Arabic-Indic digits (٠١٢), Persian digits (۰۱۲), and a comma or the
  * Arabic decimal mark (٫) as the decimal separator.

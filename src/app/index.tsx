@@ -14,6 +14,7 @@ export default function Home() {
       <BigButton label={t('home.tiles')} hint={t('home.tiles.hint')} onPress={() => router.push('/tiles')} />
       <BigButton label={t('home.paint')} hint={t('home.paint.hint')} onPress={() => router.push('/paint')} />
       <BigButton label={t('home.projects')} variant="secondary" onPress={() => router.push('/projects')} />
+      <BigButton label={t('home.prices')} variant="secondary" onPress={() => router.push('/prices')} />
       <BigButton label={t('home.settings')} variant="secondary" onPress={() => router.push('/settings')} />
     </Screen>
   );

@@ -100,6 +100,11 @@ export default function PaintScreen() {
                   : []),
               ],
               steps: result.steps,
+              materials: [
+                { item: 'paint', qty: result.paintL },
+                { item: 'sealer', qty: result.sealerL },
+                { item: 'putty', qty: result.puttyKg },
+              ],
             })}
           />
           <FormulaBox steps={result.steps} />

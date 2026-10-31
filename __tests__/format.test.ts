@@ -1,4 +1,4 @@
-import { fmt, ltr, parseNumber } from '@/calc/format';
+import { fmt, ltr, parseNumber, withUnit } from '@/calc/format';
 
 describe('parseNumber', () => {
   it.each([
@@ -30,5 +30,12 @@ describe('fmt', () => {
 describe('ltr', () => {
   it('wraps text in left-to-right isolate marks', () => {
     expect(ltr('5 mm')).toBe('\u20665 mm\u2069');
+  });
+});
+
+describe('withUnit', () => {
+  it('keeps Latin units left to right and leaves Arabic units to the paragraph', () => {
+    expect(withUnit('1.26', 'm³')).toBe(ltr('1.26 m³'));
+    expect(withUnit('23', 'شيكارة')).toBe('23 شيكارة');
   });
 });

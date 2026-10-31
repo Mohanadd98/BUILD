@@ -83,6 +83,18 @@ npx expo start
 
 **Important:** saved projects live only on this phone. Uninstalling the app or losing the phone deletes them. Use **Share** to keep a copy of anything important.
 
+## Bill of quantities, prices and quotes
+
+1. When saving a calculation, choose its **construction phase** (foundations, concrete structure, masonry, plastering, flooring, painting or other).
+2. Open **Material prices** on the home screen and type your local unit prices. Leave a box empty for anything you do not price. Prices stay on this phone.
+3. Open a saved project. The **Bill of quantities** adds up every material by phase and shows the cost of priced items.
+4. Export it:
+   * **Export BOQ as PDF**: a priced table to send or print.
+   * **Export BOQ for Excel (CSV)**: opens in Excel or Google Sheets, Arabic included.
+   * **Request quotes from contractors (PDF)**: the same quantities with empty price columns, for contractors to fill in.
+
+Calculations saved before this feature have no materials list. Calculate and save them again to include them in the bill of quantities.
+
 ## Check the formulas (unit tests)
 
 Every formula has automatic tests that compare the app's answer with numbers worked out by hand.
@@ -115,7 +127,7 @@ src/
   components/   shared buttons, number boxes, result cards
   i18n/         English (en.ts) and Arabic (ar.ts) text
   state/        language, light/dark preference and saved projects in memory
-  storage/      saving projects on the phone
+  storage/      saving projects and prices on the phone, PDF and CSV export
   theme/        colours and sizes
 __tests__/      unit tests, one file per calculator plus project storage
 ```

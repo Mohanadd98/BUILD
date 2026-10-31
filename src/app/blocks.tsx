@@ -1,5 +1,6 @@
 import { useState } from 'react';
 
+import type { MaterialKey } from '@/calc/boq';
 import { calcBlocks, type BlockPreset, type BlockSize, type WallType } from '@/calc/blocks';
 import { fmt, ltr, parseNumber } from '@/calc/format';
 import { SaveButton } from '@/components/save-button';
@@ -8,6 +9,13 @@ import { MATERIALS } from '@/config/materials';
 import { usePrefs } from '@/state/preferences';
 
 type BlockChoice = BlockPreset | 'custom';
+
+const blockMaterial: Record<BlockChoice, MaterialKey> = {
+  redBrick: 'brickRed',
+  cementBrick: 'brickCement',
+  hollowBlock: 'blockHollow',
+  custom: 'blockCustom',
+};
 
 const presets = MATERIALS.masonry.blocks;
 const initialWaste = String(MATERIALS.masonry.defaultBlockWastePercent);
@@ -132,6 +140,11 @@ export default function BlocksScreen() {
                 { labelKey: 'concrete.sand', value: fmt(result.sandM3, 3), unit: 'm³' },
               ],
               steps: result.steps,
+              materials: [
+                { item: blockMaterial[choice], qty: result.blocks },
+                { item: 'cement', qty: result.cementBags },
+                { item: 'sand', qty: result.sandM3 },
+              ],
             })}
           />
           <FormulaBox steps={result.steps} />
