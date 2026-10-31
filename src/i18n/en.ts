@@ -1,5 +1,5 @@
 export const en = {
-  'app.name': 'BinaaHub',
+  'app.name': 'BUILD',
   'home.subtitle': 'Quantity calculator',
   'home.concrete': 'Concrete',
   'home.concrete.hint': 'Slabs, footings, beams',

@@ -1,4 +1,4 @@
-# BinaaHub
+# BUILD
 
 A construction quantity calculator for iPhone and Android, in Arabic and English.
 Phase 1, Egypt edition. Everything is stored on the phone; there is no account and no internet server.
@@ -35,8 +35,8 @@ You should see a version number such as `v22.x.x`.
 In the terminal, type these lines one at a time and press Enter after each:
 
 ```
-git clone https://github.com/mohanadd98/build.git binaahub
-cd binaahub
+git clone https://github.com/mohanadd98/build.git build
+cd build
 git checkout claude/binaahub-calculator-app-37hdvn
 npm install
 ```
@@ -67,7 +67,7 @@ To stop the app, press `Ctrl + C` in the terminal.
 ### Getting the latest version later
 
 ```
-cd binaahub
+cd build
 git pull
 npm install
 npx expo start

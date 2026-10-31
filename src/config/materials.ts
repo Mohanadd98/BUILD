@@ -1,5 +1,5 @@
 /**
- * BinaaHub material settings, Egypt edition.
+ * BUILD material settings, Egypt edition.
  *
  * EVERY mix ratio, coverage value and default used by the calculators lives
  * in this file. Edit a number here and every calculator updates.

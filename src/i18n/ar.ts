@@ -1,7 +1,7 @@
 import type { TKey } from './en';
 
 export const ar: Record<TKey, string> = {
-  'app.name': 'بناء هب',
+  'app.name': 'BUILD',
   'home.subtitle': 'حاسبة الكميات',
   'home.concrete': 'الخرسانة',
   'home.concrete.hint': 'بلاطات، قواعد، كمرات',

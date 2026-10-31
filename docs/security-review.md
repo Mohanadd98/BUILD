@@ -1,10 +1,10 @@
-# BinaaHub security review
+# BUILD security review
 
 Date: 31 October 2026. Scope: the whole repository, including its full git history, at Phase 1 (five calculators and saved projects).
 
 ## How the app is built, and why most web risks do not apply
 
-BinaaHub Phase 1 runs entirely on the phone. It has no server, no login, no database server, no admin pages, no payments, no file uploads, no cookies, no API keys and no network calls (verified: the source contains no `fetch`, `XMLHttpRequest`, `axios` or `WebSocket`). Saved projects stay in the phone's local storage and leave it only when the user taps Share.
+BUILD Phase 1 runs entirely on the phone. It has no server, no login, no database server, no admin pages, no payments, no file uploads, no cookies, no API keys and no network calls (verified: the source contains no `fetch`, `XMLHttpRequest`, `axios` or `WebSocket`). Saved projects stay in the phone's local storage and leave it only when the user taps Share.
 
 Most items on a typical web security checklist therefore have nothing to protect. Adding a login or server only to tick those items would create the attack surface they defend against. They become relevant in Phase 2 (accounts, marketplace, payments), and the plan at the end lists what that phase must include.
 
@@ -22,7 +22,7 @@ Most items on a typical web security checklist therefore have nothing to protect
 | 8 | **Damaged settings** | **Bug (crash):** an invalid stored language value crashed the app at start | **Fixed:** only known language and theme values are accepted. Tested |
 | 9 | Vulnerable dependencies | 15 issues before (2 high, 12 moderate, 1 low) | **Both high issues fixed** (`zod`, `@expo/cli`) with non-breaking updates. 13 moderate remain in Expo's developer tools (`glob`, `minimatch`). They run on the developer's computer, are not shipped in the app, and npm's only fix is downgrading Expo from SDK 58 to SDK 51, which is not acceptable. Re-check with each Expo update |
 | 10 | Unused packages | 6 starter template packages never imported | **Removed:** `@expo/ui`, `expo-device`, `expo-glass-effect`, `expo-image`, `expo-symbols`, `expo-web-browser` |
-| 11 | Deep links (`binaahub://`) | Links can open a screen but cannot change data. Deleting always asks for confirmation | None needed |
+| 11 | Deep links (`build://`) | Links can open a screen but cannot change data. Deleting always asks for confirmation | None needed |
 | 12 | Data at rest | Saved projects are stored unencrypted on the phone. They contain quantities, not personal or financial data | Accepted for Phase 1. Encrypt if personal data is ever stored |
 
 ## Checklist items that do not apply in Phase 1

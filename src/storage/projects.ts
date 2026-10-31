@@ -2,6 +2,8 @@ import AsyncStorage from '@react-native-async-storage/async-storage';
 
 import type { Step } from '@/calc/format';
 
+import { getItemMigrating } from './keys';
+
 export type Tool = 'concrete' | 'blocks' | 'plaster' | 'tiles' | 'paint';
 
 /**
@@ -37,7 +39,9 @@ export interface Project {
 /** Where to save: an existing project, or a new one with this name. */
 export type SaveTarget = { projectId: string } | { newName: string };
 
-const STORAGE_KEY = 'binaahub.projects.v1';
+const STORAGE_KEY = 'build.projects.v1';
+/** Key used before the app was renamed to BUILD; read once and migrated. */
+const LEGACY_STORAGE_KEY = 'binaahub.projects.v1';
 
 export function newId(now: number = Date.now()): string {
   return `${now.toString(36)}${Math.random().toString(36).slice(2, 8)}`;
@@ -77,7 +81,7 @@ export function lineText(line: Line, t: (key: string) => string): string {
 /** Plain text for WhatsApp or email, including the formulas. */
 export function shareText(projectName: string, calc: SavedCalc, t: (key: string) => string, date: string): string {
   return [
-    `BinaaHub · ${projectName}`,
+    `BUILD · ${projectName}`,
     `${t(`${calc.tool}.title`)} · ${date}`,
     '',
     ...calc.inputs.map((l) => lineText(l, t)),
@@ -140,7 +144,7 @@ export function parseProjects(raw: string | null): Project[] {
 export async function loadProjects(): Promise<Project[] | null> {
   let raw: string | null;
   try {
-    raw = await AsyncStorage.getItem(STORAGE_KEY);
+    raw = await getItemMigrating(STORAGE_KEY, LEGACY_STORAGE_KEY);
   } catch {
     return null;
   }

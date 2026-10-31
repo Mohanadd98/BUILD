@@ -1,11 +1,11 @@
 {
   "expo": {
-    "name": "BinaaHub",
-    "slug": "binaahub",
+    "name": "BUILD",
+    "slug": "build",
     "version": "1.0.0",
     "orientation": "portrait",
     "icon": "./assets/images/icon.png",
-    "scheme": "binaahub",
+    "scheme": "build",
     "userInterfaceStyle": "automatic",
     "ios": {
       "icon": "./assets/expo.icon"

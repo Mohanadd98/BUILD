@@ -8,7 +8,7 @@ import { DevSettings, I18nManager, Platform } from 'react-native';
  * to match the chosen language and restarts once.
  */
 
-const GUARD_KEY = 'binaahub.rtlReload.v1';
+const GUARD_KEY = 'build.rtlReload.v1';
 
 export type RTLAction = 'none' | 'reload' | 'giveUp';
 

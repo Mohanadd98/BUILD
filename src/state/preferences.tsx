@@ -5,6 +5,7 @@ import { useColorScheme } from 'react-native';
 
 import { ar } from '@/i18n/ar';
 import { en, type TKey } from '@/i18n/en';
+import { getItemMigrating } from '@/storage/keys';
 import { palette, type Colors } from '@/theme/colors';
 
 import { applyDirection } from './rtl';
@@ -26,7 +27,9 @@ interface PrefsContext extends Prefs {
   colors: Colors;
 }
 
-const STORAGE_KEY = 'binaahub.prefs.v1';
+const STORAGE_KEY = 'build.prefs.v1';
+/** Key used before the app was renamed to BUILD; read once and migrated. */
+const LEGACY_STORAGE_KEY = 'binaahub.prefs.v1';
 const dictionaries = { en, ar } as const;
 
 function deviceLang(): Lang {
@@ -50,7 +53,7 @@ export function PreferencesProvider({ children }: { children: ReactNode }) {
   const scheme = useColorScheme();
 
   useEffect(() => {
-    AsyncStorage.getItem(STORAGE_KEY)
+    getItemMigrating(STORAGE_KEY, LEGACY_STORAGE_KEY)
       .then((raw) => {
         if (raw) setPrefs((p) => ({ ...p, ...cleanPrefs(JSON.parse(raw)) }));
       })

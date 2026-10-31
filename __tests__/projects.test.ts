@@ -82,7 +82,7 @@ describe('project storage', () => {
   it('builds share text that includes the formulas', () => {
     expect(shareText('Villa Maadi', calc('a'), t, '30/10/2026')).toBe(
       [
-        'BinaaHub · Villa Maadi',
+        'BUILD · Villa Maadi',
         'Concrete · 30/10/2026',
         '',
         'Concrete type: Reinforced',
