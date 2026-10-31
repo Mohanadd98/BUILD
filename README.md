@@ -95,6 +95,15 @@ npx expo start
 
 Calculations saved before this feature have no materials list. Calculate and save them again to include them in the bill of quantities.
 
+## Hot weather warning
+
+The Concrete screen shows the highest air temperature forecast for the next 3 days at the site city. At 35 °C or more it warns that fresh concrete must not exceed 35 °C (ECP 203-2025 clause 2-3-1-6); from 30 °C it suggests hot weather precautions.
+
+* Choose the city in **Settings**, or choose **Off** to keep BUILD fully offline.
+* Only the city's public coordinates are sent to the free Open-Meteo service, never your location.
+* Without internet the warning simply does not appear.
+* Open-Meteo is free for non-commercial use only; a commercial release needs their paid plan or another provider.
+
 ## Check the formulas (unit tests)
 
 Every formula has automatic tests that compare the app's answer with numbers worked out by hand.

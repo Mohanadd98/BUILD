@@ -10,6 +10,7 @@ import {
   type ConcreteZone,
 } from '@/calc/concrete';
 import { fmt, ltr, parseNumber } from '@/calc/format';
+import { HeatWarning } from '@/components/heat-warning';
 import { SaveButton } from '@/components/save-button';
 import { AppText, BigButton, Card, Choice, FormulaBox, NumberField, ResultRow, Screen } from '@/components/ui';
 import { MATERIALS } from '@/config/materials';
@@ -51,6 +52,7 @@ export default function ConcreteScreen() {
 
   return (
     <Screen>
+      <HeatWarning />
       <Choice<ConcreteZone>
         label={t('concrete.zone')}
         value={zone}

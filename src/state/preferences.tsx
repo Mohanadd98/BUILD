@@ -3,6 +3,7 @@ import { getLocales } from 'expo-localization';
 import { createContext, useContext, useEffect, useMemo, useState, type ReactNode } from 'react';
 import { useColorScheme } from 'react-native';
 
+import { isCityKey, type CityKey } from '@/config/cities';
 import { ar } from '@/i18n/ar';
 import { en, type TKey } from '@/i18n/en';
 import { getItemMigrating } from '@/storage/keys';
@@ -16,14 +17,19 @@ export type ThemePref = 'system' | 'light' | 'dark';
 interface Prefs {
   lang: Lang;
   themePref: ThemePref;
+  /** City for the hot weather forecast, or 'off' to keep the app fully offline. */
+  weatherCity: CityKey | 'off';
 }
 
 interface PrefsContext extends Prefs {
   setLang: (lang: Lang) => void;
   setThemePref: (pref: ThemePref) => void;
+  setWeatherCity: (city: CityKey | 'off') => void;
   t: (key: TKey) => string;
   isRTL: boolean;
   isDark: boolean;
+  /** False until saved settings are read; nothing that depends on them should run before. */
+  loaded: boolean;
   colors: Colors;
 }
 
@@ -42,13 +48,14 @@ export function cleanPrefs(data: unknown): Partial<Prefs> {
   const out: Partial<Prefs> = {};
   if (d.lang === 'en' || d.lang === 'ar') out.lang = d.lang;
   if (d.themePref === 'system' || d.themePref === 'light' || d.themePref === 'dark') out.themePref = d.themePref;
+  if (d.weatherCity === 'off' || isCityKey(d.weatherCity)) out.weatherCity = d.weatherCity;
   return out;
 }
 
 const Ctx = createContext<PrefsContext | null>(null);
 
 export function PreferencesProvider({ children }: { children: ReactNode }) {
-  const [prefs, setPrefs] = useState<Prefs>(() => ({ lang: deviceLang(), themePref: 'system' }));
+  const [prefs, setPrefs] = useState<Prefs>(() => ({ lang: deviceLang(), themePref: 'system', weatherCity: 'cairo' }));
   const [loaded, setLoaded] = useState(false);
   const scheme = useColorScheme();
 
@@ -81,12 +88,14 @@ export function PreferencesProvider({ children }: { children: ReactNode }) {
       ...prefs,
       setLang: (lang) => setPrefs((p) => ({ ...p, lang })),
       setThemePref: (themePref) => setPrefs((p) => ({ ...p, themePref })),
+      setWeatherCity: (weatherCity) => setPrefs((p) => ({ ...p, weatherCity })),
       t: (key) => dict[key] ?? en[key],
       isRTL: prefs.lang === 'ar',
       isDark,
       colors: isDark ? palette.dark : palette.light,
+      loaded,
     };
-  }, [prefs, scheme]);
+  }, [prefs, scheme, loaded]);
 
   return <Ctx.Provider value={value}>{children}</Ctx.Provider>;
 }

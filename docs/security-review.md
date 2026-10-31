@@ -4,7 +4,9 @@ Date: 31 October 2026. Scope: the whole repository, including its full git histo
 
 ## How the app is built, and why most web risks do not apply
 
-BUILD Phase 1 runs entirely on the phone. It has no server, no login, no database server, no admin pages, no payments, no file uploads, no cookies, no API keys and no network calls (verified: the source contains no `fetch`, `XMLHttpRequest`, `axios` or `WebSocket`). Saved projects stay in the phone's local storage and leave it only when the user taps Share.
+BUILD Phase 1 runs entirely on the phone. It has no server, no login, no database server, no admin pages, no payments, no file uploads, no cookies, no API keys and no network calls (verified: the source contains no `fetch`, `XMLHttpRequest`, `axios` or `WebSocket`). Saved projects stay in the phone's local storage and leave it only when the user taps Share or Export.
+
+**Update (hot weather warning):** the app now makes one kind of network request: an HTTPS call to `api.open-meteo.com` with the chosen city's public coordinates, to fetch a 3-day temperature forecast. No account, key, phone location or project data is sent. Choosing Off in Settings stops it completely, and the app waits for saved settings before sending anything, so a user who chose Off never sends a request (tested). Responses are validated before use, and a failed or slow request (8 s timeout) just hides the warning.
 
 Most items on a typical web security checklist therefore have nothing to protect. Adding a login or server only to tick those items would create the attack surface they defend against. They become relevant in Phase 2 (accounts, marketplace, payments), and the plan at the end lists what that phase must include.
 

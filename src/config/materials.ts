@@ -134,6 +134,21 @@ export const MATERIALS = {
       },
     },
     /**
+     * Hot weather warning on the concrete screen, from the site city's
+     * 3-day maximum air temperature forecast.
+     * limitC: ECP 203-2025 clause 2-3-1-6 (p. 2-21): fresh concrete must not
+     *   exceed 35 °C when mixed and placed. STATUS: Code. The app compares
+     *   the forecast AIR temperature with it, which is only an indicator:
+     *   measure the concrete itself on site.
+     * cautionC: air temperature at which to start hot weather precautions.
+     *   STATUS: Practice. ECP 203-2025 clause 2-6 refers hot weather work to
+     *   the HBRC specifications for hot weather concreting.
+     * Forecasts: Open-Meteo (open-meteo.com), free without a key for
+     *   NON-COMMERCIAL use only; a commercial release needs their paid plan
+     *   or another provider.
+     */
+    hotWeather: { limitC: 35, cautionC: 30 },
+    /**
      * Reductions allowed when CEM III/A or CEM III/B is used instead of CEM I.
      * SOURCE: ECP 203-2025, footnote to Table 2-22 (p. 2-33). STATUS: Code.
      * Applies only to the chloride classes listed in `appliesTo`.
